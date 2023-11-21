@@ -17,24 +17,12 @@
     padding-bottom: 15px; 
 }
 
-.summary{
-    padding-bottom: 40px; 
-}
-
 .title-h1{
     color:rgb(0, 0, 0);
     font-size: larger;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     text-align: center;
     padding: 100px;
-    margin: 0;
-}
-
-.summary-p{
-    color:rgb(0, 0, 0);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    text-align: center;
-    padding: 30px;
     margin: 0;
 }
 
@@ -51,4 +39,22 @@
 .button:hover {
     background-color: #424874; 
     color: rgb(245, 245, 245);
-  }
+}
+
+.i{
+    border: 1px solid #000000;
+    border-radius: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: medium;
+    width: 400px; 
+    padding: 15px;
+}
+
+.i::placeholder {
+    color: #000000; 
+}
+
+.input{
+    padding-bottom: 20px;
+}
+

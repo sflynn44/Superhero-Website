@@ -7,7 +7,7 @@ const Base = () => {
     const nav = useNavigate()
 
     const buttonClick = () => {
-        console.log("temp")//this will be login 
+        nav("./login") 
     }
 
     return (
