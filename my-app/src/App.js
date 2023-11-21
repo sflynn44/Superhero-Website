@@ -1,9 +1,15 @@
 import './App.css';
+import Base from "./components/basePage";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
     <div className="App">
-      <h1>Testing</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Base />}/>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
