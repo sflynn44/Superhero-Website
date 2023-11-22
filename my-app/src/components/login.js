@@ -11,6 +11,10 @@ const Login = () => {
     const [userE, setUE] = useState("")
     const [passwordE, setPE] = useState("")
 
+    const buttonClick1 = () => {
+        nav("/createA") 
+    }
+
     const buttonClick = () => {
         
         setUE("")
@@ -55,6 +59,10 @@ const Login = () => {
 
             <div className = "b">
                 <button className = "button" onClick = {buttonClick}>Enter</button>
+            </div>
+
+            <div className = "b1">
+                <button className = "button1" onClick = {buttonClick1}>Create Account</button>
             </div>
 
         </div>
