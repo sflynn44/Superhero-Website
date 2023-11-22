@@ -6,8 +6,30 @@ import './login.css';
 const Login = () => {
     const nav = useNavigate()
 
+    const [email, setE] = useState("")
+    const [passW, setP] = useState("")
+    const [userE, setUE] = useState("")
+    const [passwordE, setPE] = useState("")
+
     const buttonClick = () => {
-        console.log("test")
+        
+        setUE("")
+        setPE("")
+
+        if (email === "") {
+            setUE("Please enter your email address")
+            return
+        }
+
+        if (passW === "") {
+            setPE("Please enter a password")
+            return
+        }
+
+        if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)){
+            setUE("Please enter a valid email")
+        }
+
     }
 
     return (
@@ -16,13 +38,20 @@ const Login = () => {
                 <h1>Login</h1>
             </div>
 
-            <form className = "input">
-                <input className = "i" autocomplete="off" placeholder=" Enter Username..."></input>
-            </form>
+            <div className = "userInput">
+                <form className = "input">
+                    <input value={email} className = "i" id = "user"autocomplete="off" placeholder=" Enter Username..." onChange={userin => setE(userin.target.value)}/>
+                </form>
+                <label className="error">{userE}</label>
+            </div>
 
-            <form className = "input">
-                <input className = "i" autocomplete="off" placeholder=" Enter Password..."></input>
-            </form>
+
+            <div className = "userInput">
+                <form className = "input">
+                    <input value={passW} className = "i" id = "pass"autocomplete="off" placeholder=" Enter Password..." onChange={passin => setP(passin.target.value)}/>
+                </form>
+                <label className="error">{passwordE}</label>
+            </div>
 
             <div className = "b">
                 <button className = "button" onClick = {buttonClick}>Enter</button>
