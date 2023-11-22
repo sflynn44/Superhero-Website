@@ -241,16 +241,36 @@ router.get('/search/getPowers/:powers/:num', (req, res) => {
 //create a custom list 
 router.post('/createList', (req, res) => {
 
-  //get the name for the new list 
+  //get the name, owner, and description for the new list 
   const newName = req.body.newName; 
+  const owner = req.body.owner; 
+  const description = req.body.des; 
+
+  //if either required fields are empty send an error message 
+  if (newName === "" || owner === "") {
+    return res.status(400).json({ message: "Missing list elements" });
+  }
 
   //if the list already exists send error code 
   if(fs.existsSync(`Lists/${newName}.json`)){
     return res.status(400).json({message: "List already exists"})
   }
 
+  //get the number of lists the have been created 
+  ///////////need to adjust this so that it only counts the ones with the same owner as the one creating it
+  const numOfLists = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'))
+  const num = numOfLists.length
+
+  //if 20 lists have already been created send an error message 
+  if(num === 20){
+    return res.status(400).json({ message: "Number of lists cannot exceed 20" });
+  }
+
   //new list content 
   const newList = [
+    {"Owner": [owner]},
+    {"View": ["private"]},
+    {"Description": [description]},
     {"IDs": []}
   ]
 
