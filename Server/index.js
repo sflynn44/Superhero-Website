@@ -493,6 +493,35 @@ router2.post('/createUser', (req, res) => {
 })
 
 
+router2.post('/verify', (req, res) => {
+
+  const email = req.body.email
+  const passW = req.body.passW
+
+  const users = JSON.parse(fs.readFileSync(`users.json`))  
+  const user = users.users.find(user => email === user.email)
+  
+  if(!user){
+    return res.status(400).json({message: "No user with that email exists"})
+  }
+
+  const hashedPassword = user.password
+
+  bcrypt.compare(passW, hashedPassword, (error, result) => {
+    
+    if(error){
+      return res.status(500).json({message: "Error during comparison"});
+  } else if(result){
+      console.log("Successful password comparison");
+      // Put in stuff about jwt 
+  } else {
+      console.log("Password comparison failed");
+      return res.status(401).json({message: "Invalid password"});
+  }
+
+  })
+})
+
 
 
 //install routers
