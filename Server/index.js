@@ -3,7 +3,9 @@ const express = require('express')
 const app = express()
 const port = 3000
 const fs = require('fs')
+const bcrypt = require('bcrypt')
 const router = express.Router()
+const router2 = express.Router()
 const bodyParser = require('body-parser');
 
 //connecting to frontend 
@@ -286,6 +288,8 @@ router.delete("/deleteList/:listName", (req, res) => {
   //get the requested list name 
   const listN = req.params.listName.toLowerCase(); 
 
+  ///////can only delete the 
+
   //if the file does not exist send error message 
   if(!fs.existsSync(`Lists/${listN}.json`)){
     return res.status(400).json({message: "List does not exists"})
@@ -446,8 +450,54 @@ router.get('/lists/j', (req, res) => {
 
 })
 
-//install router
+
+
+
+
+
+
+router2.post('/createUser', (req, res) => {
+
+  const userN = req.body.userN
+  const email = req.body.email
+  const passW = req.body.passW
+
+  const users = JSON.parse(fs.readFileSync(`users.json`))  
+  const user = users.users.find(user => email === user.email)
+
+  if(user){
+    return res.status(400).json({message: "User already exists with that email"})
+  }
+
+  bcrypt.hash(passW,10,(error, hashedPass) => {
+    if (error) {
+      return res.status(400).json({message: "Hashing error"})
+    }
+      const newUser = 
+      {
+        "username": userN,
+        "email": email,
+        "password": hashedPass,
+        "status": "Active",
+        "verification": "Unverified"
+      }
+
+      users.users.push(newUser)
+
+      fs.writeFileSync(`users.json`, JSON.stringify(users))
+
+      return res.status(200).json({message: "User created successfully"})
+
+    }
+  )
+})
+
+
+
+
+//install routers
 app.use('/api/heroes', router)
+app.use('/api/users', router2)
 
 //open port 
 app.listen(port, () => {
