@@ -6,10 +6,35 @@ const fs = require('fs')
 const bcrypt = require('bcrypt')
 const router = express.Router()
 const router2 = express.Router()
+const router3 = express.Router()
 const bodyParser = require('body-parser');
+const jwt = require("jsonwebtoken");
 
 //connecting to frontend 
 app.use('/', express.static('my-app'));
+
+const jwtSecretkey = "tfmmfspfasdafjnjn"
+
+
+const verify = (req, res, next) => {
+
+  const token = req.headers.authorization 
+
+  jwt.verify(token, jwtSecretkey, (error, userData) => {
+
+    if(error){
+      return res.status(401).json({ message: 'Issue with verification'});
+    }else{
+      req.user = userData
+      next()
+    }
+
+  })
+
+}
+
+router3.use(verify)
+
 
 //middleware to do logging 
 app.use((req, res, next) => {
@@ -22,6 +47,7 @@ app.use((req, res, next) => {
 //ensure json data is acceptable 
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 let data = [];
@@ -479,7 +505,8 @@ router2.post('/createUser', (req, res) => {
         "email": email,
         "password": hashedPass,
         "status": "Active",
-        "verification": "Unverified"
+        "verification": "Unverified",
+        "admin": "no"
       }
 
       users.users.push(newUser)
@@ -493,7 +520,7 @@ router2.post('/createUser', (req, res) => {
 })
 
 
-router2.post('/verify', (req, res) => {
+router2.post('/confirmLogin', (req, res) => {
 
   const email = req.body.email
   const passW = req.body.passW
@@ -513,7 +540,12 @@ router2.post('/verify', (req, res) => {
       return res.status(500).json({message: "Error during comparison"});
   } else if(result){
       console.log("Successful password comparison");
-      // Put in stuff about jwt 
+
+      const admin = user.admin
+      let jwtData = {email, admin};
+      const jwtToken = jwt.sign(jwtData, jwtSecretkey)
+      return res.status(200).json({message: "successful creation of jwt token", jwtToken})
+
   } else {
       console.log("Password comparison failed");
       return res.status(401).json({message: "Invalid password"});
@@ -527,6 +559,7 @@ router2.post('/verify', (req, res) => {
 //install routers
 app.use('/api/heroes', router)
 app.use('/api/users', router2)
+app.use('/api/auth', router3)
 
 //open port 
 app.listen(port, () => {
