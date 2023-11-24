@@ -11,6 +11,7 @@ const CreateAccount = () => {
     const [error1, setE1] = useState("")
     const [error2, setE2] = useState("")
     const [error3, setE3] = useState("")
+    const [createE, setCE] = useState("")
 
     async function createA(userN, emailA, passW){
         try{
@@ -24,6 +25,12 @@ const CreateAccount = () => {
                     "Content-type": "application/json"
                 }
             })
+            if (!create.ok) {
+                console.log("error")
+                const j = await create.json()
+                console.log("Response:", j.message);
+                setCE(j.message)
+            }
         }catch(error){
             console.log(`Error message: ${error}`)
         }
@@ -34,6 +41,7 @@ const CreateAccount = () => {
         setE1("")
         setE2("")
         setE3("")
+        setCE("")
 
         if(userN === ""){
             setE1("Please enter a username")
@@ -90,7 +98,7 @@ const CreateAccount = () => {
             <div className = "b">
                 <button className = "button" onClick = {buttonClick}>Create Account</button>
             </div>
-
+            <label className="error">{createE}</label>
 
         </div>
 

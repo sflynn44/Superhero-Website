@@ -10,6 +10,35 @@ const Login = () => {
     const [passW, setP] = useState("")
     const [userE, setUE] = useState("")
     const [passwordE, setPE] = useState("")
+    const [loginE, setLE] = useState("")
+
+    async function loginAccount(emailA, passW){
+        try{
+            const login = await fetch('/api/users/confirmLogin', {
+        
+                method: "POST",
+                  
+                body: JSON.stringify({email: emailA, passW: passW}),
+                  
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+                //check the response 
+            if (!login.ok) {
+                console.log("error")
+                const j = await login.json()
+                console.log("Response:", j.message);
+                setLE(j.message)
+            } else{
+                const j = await login.json()
+                console.log("Response:", j.message);
+                setLE(j.message)
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
 
     const buttonClick1 = () => {
         nav("/createA") 
@@ -19,6 +48,7 @@ const Login = () => {
         
         setUE("")
         setPE("")
+        setLE("")
 
         if (email === "") {
             setUE("Please enter your email address")
@@ -33,6 +63,8 @@ const Login = () => {
         if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)){
             setUE("Please enter a valid email")
         }
+
+        loginAccount(email, passW)
 
     }
 
@@ -60,6 +92,7 @@ const Login = () => {
             <div className = "b">
                 <button className = "button" onClick = {buttonClick}>Enter</button>
             </div>
+            <label className="error">{loginE}</label>
 
             <div className = "b1">
                 <button className = "button1" onClick = {buttonClick1}>Create Account</button>

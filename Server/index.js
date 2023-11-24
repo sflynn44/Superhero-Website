@@ -529,6 +529,7 @@ router2.post('/confirmLogin', (req, res) => {
   const user = users.users.find(user => email === user.email)
   
   if(!user){
+    console.log("No user exists")
     return res.status(400).json({message: "No user with that email exists"})
   }
 
@@ -537,14 +538,15 @@ router2.post('/confirmLogin', (req, res) => {
   bcrypt.compare(passW, hashedPassword, (error, result) => {
     
     if(error){
-      return res.status(500).json({message: "Error during comparison"});
+      return res.status(500).json({message: "Error during login comparison"});
   } else if(result){
       console.log("Successful password comparison");
 
       const admin = user.admin
       let jwtData = {email, admin};
       const jwtToken = jwt.sign(jwtData, jwtSecretkey)
-      return res.status(200).json({message: "successful creation of jwt token", jwtToken})
+      console.log("successful jwt creation")
+      return res.status(200).json({message: "Successful login", jwtToken})
 
   } else {
       console.log("Password comparison failed");
