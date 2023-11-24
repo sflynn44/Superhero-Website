@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node Server/index.js",
+    "build": "cd my-app && react-scripts start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -12,6 +12,23 @@ const CreateAccount = () => {
     const [error2, setE2] = useState("")
     const [error3, setE3] = useState("")
 
+    async function createA(userN, emailA, passW){
+        try{
+            const create = await fetch('/api/users/createUser', {
+        
+                method: "POST",
+                  
+                body: JSON.stringify({userN: userN, email: emailA, passW: passW}),
+                  
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
     const buttonClick = () => {
         
         setE1("")
@@ -36,6 +53,10 @@ const CreateAccount = () => {
         if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailA)){
             setE2("Please enter a valid email")
         }
+
+        
+        createA(userN, emailA, passW)
+
     }
 
     return(
