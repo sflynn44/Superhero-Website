@@ -556,6 +556,21 @@ router2.post('/confirmLogin', (req, res) => {
   })
 })
 
+router2.post('/emailConfirmation', (req, res) => {
+
+  const email = req.body.email
+
+  const users = JSON.parse(fs.readFileSync(`users.json`))  
+  const user = users.users.find(user => email === user.email)
+
+  user.verification = "Verified"
+
+  fs.writeFileSync(`users.json`, JSON.stringify(users))
+
+  return res.status(200).json({message: "Email has been verified"})
+
+})
+
 
 
 //install routers
