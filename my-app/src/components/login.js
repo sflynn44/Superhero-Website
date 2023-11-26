@@ -26,7 +26,6 @@ const Login = () => {
             })
                 //check the response 
             if (!login.ok) {
-                console.log("error")
                 const j = await login.json()
                 console.log("Response:", j.message);
                 setLE(j.message)

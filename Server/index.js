@@ -181,32 +181,124 @@ router.get('/:id/information', (req, res) => {
 });
 
 
-// Get the heroes based on a field, pattern, and number of results
-router.get('/:field/:pattern/:n', (req, res) => {
 
-  //create and retrieve variables 
-  const results = []
-  const field = (req.params.field);
-  const pattern = (req.params.pattern);
-  const num = parseInt(req.params.n, 10)
 
-  //if no number is specified then all matches are collected and pushed 
-  if(num === 0){
-    const matches = data.filter(hero => hero[field].includes(pattern))
-    results.push(matches)
-  }else{
-    //if number is specified than only the first n matches are collected and pushed 
-    const matches = data.filter(hero => hero[field].includes(pattern)).slice(0,num)
-    results.push(matches)
+
+
+
+
+
+
+
+//Search function based on the user input 
+router2.post('/searchHeroes', (req, res) => {
+
+  //get the search inputs 
+  const nameR = req.body.nameR
+  const raceR = req.body.raceR 
+  const pubR = req.body.publisherR
+  const powerR = req.body.powerR
+
+  //copy all of the data
+  let results = data
+
+  //if there is input in the name category filter the heroes for the name 
+  if(nameR !== ""){
+    results = results.filter(hero => hero.name.includes(nameR))
   }
 
-  //if matches are found they are sent if not an error code is sent 
-  if (results[0].length > 0) {
+  //if there is input in the race category filter the heroes for the race 
+  if (raceR !== ""){
+    results = results.filter(hero => hero.Race.includes(raceR))
+  }
+
+  //if there is input in the publisher category filter the heroes for the publisher 
+  if (pubR !== ""){
+    results = results.filter(hero => hero.Publisher.includes(pubR))
+  }
+
+  //if there is input in the power category filter the heroes for the power 
+  if (powerR !== ""){
+
+    //if all the other search fields are empty search for powers from power array
+    if(nameR == "" && raceR == "" && pubR == ""){
+      
+      //get all the power objects where the input power is true 
+      const pResults = power.filter(p => p[powerR] === "True");
+
+      //if the power objects exist
+      if(pResults.length > 0){
+        //get the hero names of the true powers 
+        const hResults = pResults.map(r => r.hero_names)
+       
+        //if the hero names exist 
+        if(hResults.length > 0){
+          //create the temp list 
+          powerResult = []
+
+            for(let p=0; p<hResults.length; p++){
+              //get the hero information for the heroes with true power
+              powerResult.push(results.filter(hero => hero.name.includes(hResults[p])))
+            }
+            
+            //set results equal to that list of heros 
+            results = powerResult
+        }
+      }
+
+      //if the other fields have input filter the results from the other 
+    } else {
+      
+      //get the names from the filtered results 
+      const names = results.map(r => r.name)
+
+      //create the temp array
+      pow = []
+
+      for(let i=0; i<names.length; i++){
+
+        //search the power data for the object with the hero names
+        const powers = power.find(p => p.hero_names === names[i]);
+
+        //if it exists and the designated power is equal to true 
+        if (powers && powers[powerR] === "True") {
+
+              //push the hero names that have that power equal to true
+              pow.push(names[i]);
+        }
+
+        //create the temp array
+        powerResults = []
+        for(let j=0; j<pow.length; j++){
+          //add the hero information for the heroes 
+          powerResults.push(data.filter(hero => hero.name===(pow[j])))
+
+        }
+        //set results equal to the power filter results 
+        results = powerResults 
+      }
+    }
+
+  }
+
+  //if results are found send them 
+  if(results.length>0){
     res.json(results);
-  }else {
-    res.status(404).json({ message: 'No matches found' });
+  } else {
+    //if not send an error message 
+    res.status(404).json({ message: 'Results not found' });
   }
+
 })
+
+  
+
+
+
+
+
+
+
 
 
 //search by the power input by the user 
@@ -482,6 +574,10 @@ router.get('/lists/j', (req, res) => {
 
 
 
+
+
+
+
 router2.post('/createUser', (req, res) => {
 
   const userN = req.body.userN
@@ -533,6 +629,14 @@ router2.post('/confirmLogin', (req, res) => {
     return res.status(400).json({message: "No user with that email exists"})
   }
 
+  if(user.status == "Deactivated"){
+    return res.status(400).json({message: "User account is disabled. Please contact the administrator. "})
+  }
+
+  if(user.verification == "Unverified"){
+    return res.status(400).json({message: "Email has not been verified"})
+  }
+
   const hashedPassword = user.password
 
   bcrypt.compare(passW, hashedPassword, (error, result) => {
@@ -556,9 +660,9 @@ router2.post('/confirmLogin', (req, res) => {
   })
 })
 
-router2.post('/emailConfirmation', (req, res) => {
+router2.post('/emailConfirmation/:email', (req, res) => {
 
-  const email = req.body.email
+  const email = req.params.email
 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
   const user = users.users.find(user => email === user.email)
