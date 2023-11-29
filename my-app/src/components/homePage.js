@@ -6,6 +6,12 @@ import './homePage.css';
 const Home = () => {
     const nav = useNavigate()
 
+    let userN = localStorage.getItem("email")
+
+    if(userN == "admin123@gmail.com"){
+        userN = "Admin"
+    }
+
     return (
 
         <div className = "base">
@@ -18,6 +24,7 @@ const Home = () => {
                 <Link to='/updateP'>Account Settings</Link>
                 <Link to='/login'>Login</Link>
                 <Link>Log Out</Link>
+                <h3>{userN}</h3>
             </div>
 
             <div className = "content">

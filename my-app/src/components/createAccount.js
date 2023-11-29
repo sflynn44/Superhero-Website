@@ -31,6 +31,8 @@ const CreateAccount = () => {
                 const j = await create.json()
                 console.log("Response:", j.message);
                 setCE(j.message)
+
+                nav('/')
             }
         }catch(error){
             console.log(`Error message: ${error}`)
@@ -65,8 +67,6 @@ const CreateAccount = () => {
 
         
         createA(userN, emailA, passW)
-
-        nav('/')
 
     }
 

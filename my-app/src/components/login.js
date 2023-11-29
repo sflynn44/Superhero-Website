@@ -28,13 +28,17 @@ const Login = () => {
                 //check the response 
             if (!login.ok) {
                 const j = await login.json()
+                console.log(j.message);
                 setLE(j.message)
             } else{
                 const j = await login.json()
+                console.log(j.message);
                 setLE(j.message)
 
                 localStorage.setItem("jwtToken", login.jwtToken)
                 localStorage.setItem("email", email)
+
+                nav('/')
             }
         }catch(error){
             console.log(`Error message: ${error}`)
@@ -66,8 +70,6 @@ const Login = () => {
         }
 
         loginAccount(email, passW)
-
-        nav('/')
 
     }
 

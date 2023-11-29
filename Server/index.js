@@ -632,9 +632,9 @@ router2.post('/confirmLogin', (req, res) => {
     return res.status(400).json({message: "User account is disabled. Please contact the administrator. "})
   }
 
-  if(user.verification == "Unverified"){
-    return res.status(400).json({message: "Email has not been verified"})
-  }
+  // if(user.verification == "Unverified"){
+  //   return res.status(400).json({message: "Email has not been verified"})
+  // }
 
   const hashedPassword = user.password
 
@@ -663,11 +663,10 @@ router2.post('/emailConfirmation/:email', (req, res) => {
   const email = req.params.email
 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
-  const user = users.users.find(user => email === user.email)
+  const user = users.users.findIndex(user => email === user.email)
 
-  user.verification = "Verified"
+  users.users[user].verification = "Verified"
 
-  //fix this so it only updates that user 
   fs.writeFileSync(`users.json`, JSON.stringify(users))
 
   return res.status(200).json({message: "Email has been verified"})
@@ -677,7 +676,7 @@ router2.post('/emailConfirmation/:email', (req, res) => {
 
 router2.post('/grantAdmin', (req, res) => {
 
-  const userN = req.body.userN
+  const email = req.body.email
   const adminTest = req.body.adminN
 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
@@ -686,12 +685,11 @@ router2.post('/grantAdmin', (req, res) => {
     return res.status(400).json({message: "You do not have administrator access"})
   }
 
-  const changedUser = users.users.find(user => userN === user.username)
+  const changedUser = users.users.findIndex(user => email === user.email)
 
-  changedUser.admin = "Yes"
+  users.users[changedUser].admin = "Yes"
 
-  //fix this so it only updates that user 
-  fs.writeFileSync(`users.json`, JSON.stringify(changedUser))
+  fs.writeFileSync(`users.json`, JSON.stringify(users))
 
   return res.status(200).json({message: "Administrator permissions have been given"})
 
