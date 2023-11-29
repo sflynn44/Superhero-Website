@@ -194,27 +194,26 @@ router.get('/:id/information', (req, res) => {
 router2.post('/searchHeroes', (req, res) => {
 
   //get the search inputs 
-  const nameR = req.body.nameR
-  const raceR = req.body.raceR 
-  const pubR = req.body.publisherR
+  const nameR = req.body.nameR.toLowerCase()
+  const raceR = req.body.raceR.toLowerCase()
+  const pubR = req.body.publisherR.toLowerCase()
   const powerR = req.body.powerR
-
   //copy all of the data
   let results = data
 
   //if there is input in the name category filter the heroes for the name 
   if(nameR !== ""){
-    results = results.filter(hero => hero.name.includes(nameR))
+    results = results.filter(hero => hero.name.toLowerCase().includes(nameR))
   }
 
   //if there is input in the race category filter the heroes for the race 
   if (raceR !== ""){
-    results = results.filter(hero => hero.Race.includes(raceR))
+    results = results.filter(hero => hero.Race.toLowerCase().includes(raceR))
   }
 
   //if there is input in the publisher category filter the heroes for the publisher 
   if (pubR !== ""){
-    results = results.filter(hero => hero.Publisher.includes(pubR))
+    results = results.filter(hero => hero.Publisher.toLowerCase().includes(pubR))
   }
 
   //if there is input in the power category filter the heroes for the power 
@@ -649,7 +648,6 @@ router2.post('/confirmLogin', (req, res) => {
       const admin = user.admin
       let jwtData = {email, admin};
       const jwtToken = jwt.sign(jwtData, jwtSecretkey)
-      console.log("successful jwt creation")
       return res.status(200).json({message: "Successful login", jwtToken})
 
   } else {
@@ -669,9 +667,33 @@ router2.post('/emailConfirmation/:email', (req, res) => {
 
   user.verification = "Verified"
 
+  //fix this so it only updates that user 
   fs.writeFileSync(`users.json`, JSON.stringify(users))
 
   return res.status(200).json({message: "Email has been verified"})
+
+})
+
+
+router2.post('/grantAdmin', (req, res) => {
+
+  const userN = req.body.userN
+  const adminTest = req.body.adminN
+
+  const users = JSON.parse(fs.readFileSync(`users.json`))  
+
+  if("administrator" !== adminTest){
+    return res.status(400).json({message: "You do not have administrator access"})
+  }
+
+  const changedUser = users.users.find(user => userN === user.username)
+
+  changedUser.admin = "Yes"
+
+  //fix this so it only updates that user 
+  fs.writeFileSync(`users.json`, JSON.stringify(changedUser))
+
+  return res.status(200).json({message: "Administrator permissions have been given"})
 
 })
 

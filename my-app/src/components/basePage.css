@@ -13,6 +13,16 @@
     text-align: center;
 }
 
+.test{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #A6B1E1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .title{
     padding-bottom: 15px; 
 }

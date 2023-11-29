@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import {useNavigate} from "react-router-dom"
+import {Link} from 'react-router-dom';
 import './login.css';
 
 
@@ -27,12 +28,13 @@ const Login = () => {
                 //check the response 
             if (!login.ok) {
                 const j = await login.json()
-                console.log("Response:", j.message);
                 setLE(j.message)
             } else{
                 const j = await login.json()
-                console.log("Response:", j.message);
                 setLE(j.message)
+
+                localStorage.setItem("jwtToken", login.jwtToken)
+                localStorage.setItem("email", email)
             }
         }catch(error){
             console.log(`Error message: ${error}`)
@@ -65,38 +67,54 @@ const Login = () => {
 
         loginAccount(email, passW)
 
+        nav('/')
+
     }
 
     return (
-        <div className = "main">
-            <div className = "title">
-                <h1>Login</h1>
+
+        <div className = "base">
+            <div className ="sidebar">
+                    <h2>Site Operations</h2>
+                    <Link>Search Heroes</Link>
+                    <Link>Public Lists</Link>
+                    <Link>Custom Lists</Link>
+                    <Link to='/updateP'>Account Settings</Link>
+                    <Link to='/login' className = "selected">Login</Link>
+                    <Link to='/'>Log out</Link>
             </div>
 
-            <div className = "userInput">
-                <form className = "input">
-                    <input value={email} className = "i" id = "user"autocomplete="off" placeholder=" Enter Username..." onChange={userin => setE(userin.target.value)}/>
-                </form>
-                <label className="error">{userE}</label>
+            <div className = "main">
+
+                <div className = "title">
+                    <h1>Login</h1>
+                </div>
+
+                <div className = "userInput">
+                    <form className = "input">
+                        <input value={email} className = "i" id = "user"autocomplete="off" placeholder=" Enter Email..." onChange={userin => setE(userin.target.value)}/>
+                    </form>
+                    <label className="error">{userE}</label>
+                </div>
+
+
+                <div className = "userInput">
+                    <form className = "input">
+                        <input value={passW} className = "i" id = "pass"autocomplete="off" placeholder=" Enter Password..." onChange={passin => setP(passin.target.value)}/>
+                    </form>
+                    <label className="error">{passwordE}</label>
+                </div>
+
+                <div className = "b">
+                    <button className = "button" onClick = {buttonClick}>Enter</button>
+                </div>
+                <label className="error">{loginE}</label>
+
+                <div className = "b1">
+                    <button className = "button1" onClick = {buttonClick1}>Create Account</button>
+                </div>
+
             </div>
-
-
-            <div className = "userInput">
-                <form className = "input">
-                    <input value={passW} className = "i" id = "pass"autocomplete="off" placeholder=" Enter Password..." onChange={passin => setP(passin.target.value)}/>
-                </form>
-                <label className="error">{passwordE}</label>
-            </div>
-
-            <div className = "b">
-                <button className = "button" onClick = {buttonClick}>Enter</button>
-            </div>
-            <label className="error">{loginE}</label>
-
-            <div className = "b1">
-                <button className = "button1" onClick = {buttonClick1}>Create Account</button>
-            </div>
-
         </div>
     )
 }

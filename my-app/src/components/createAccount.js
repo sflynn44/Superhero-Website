@@ -1,5 +1,6 @@
 import React, {useState}from "react"
 import {useNavigate} from "react-router-dom"
+import {Link} from 'react-router-dom';
 import './createAccount.css';
 
 const CreateAccount = () => {
@@ -65,41 +66,57 @@ const CreateAccount = () => {
         
         createA(userN, emailA, passW)
 
+        nav('/')
+
     }
 
     return(
-        <div className = "main">
 
-            <div className = "title">
-                <h1>Create New Account</h1>
+        <div className = "base">
+
+            <div className ="sidebar">
+                <h2>Site Operations</h2>
+                <Link>Search Heroes</Link>
+                <Link>Public Lists</Link>
+                <Link>Custom Lists</Link>
+                <Link to='/updateP'>Account Settings</Link>
+                <Link to='/login'>Login</Link>
+                <Link>Log Out</Link>
             </div>
 
-            <div className = "newInput">
-                <form className = "input">
-                    <input value={userN} className = "i" id = "user"autocomplete="off" placeholder=" Enter username..." onChange={userName => setUN(userName.target.value)}/>
-                </form>
-                <label className="error">{error1}</label>
-            </div>
+            <div className = "main">
 
-            <div className = "newInput">
-                <form className = "input">
-                    <input value={emailA} className = "i" id = "user"autocomplete="off" placeholder=" Enter email address..." onChange={emailAddress => setEA(emailAddress.target.value)}/>
-                </form>
-                <label className="error">{error2}</label>
-            </div>
+                <div className = "title">
+                    <h1>Create New Account</h1>
+                </div>
 
-            <div className = "newInput">
-                <form className = "input">
-                    <input value={passW} className = "i" id = "user"autocomplete="off" placeholder=" Enter password..." onChange={password => setP(password.target.value)}/>
-                </form>
-                <label className="error">{error3}</label>
-            </div>
+                <div className = "newInput">
+                    <form className = "input">
+                        <input value={userN} className = "i" id = "user"autocomplete="off" placeholder=" Enter username..." onChange={userName => setUN(userName.target.value)}/>
+                    </form>
+                    <label className="error">{error1}</label>
+                </div>
 
-            <div className = "b">
-                <button className = "button" onClick = {buttonClick}>Create Account</button>
-            </div>
-            <label className="error">{createE}</label>
+                <div className = "newInput">
+                    <form className = "input">
+                        <input value={emailA} className = "i" id = "user"autocomplete="off" placeholder=" Enter email address..." onChange={emailAddress => setEA(emailAddress.target.value)}/>
+                    </form>
+                    <label className="error">{error2}</label>
+                </div>
 
+                <div className = "newInput">
+                    <form className = "input">
+                        <input value={passW} className = "i" id = "user"autocomplete="off" placeholder=" Enter password..." onChange={password => setP(password.target.value)}/>
+                    </form>
+                    <label className="error">{error3}</label>
+                </div>
+
+                <div className = "b">
+                    <button className = "button" onClick = {buttonClick}>Create Account</button>
+                </div>
+                <label className="error">{createE}</label>
+
+            </div>
         </div>
 
     )

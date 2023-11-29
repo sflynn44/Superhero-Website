@@ -7,10 +7,12 @@ const Base = () => {
     const nav = useNavigate()
 
     const buttonClick = () => {
-        nav("./login") 
+        //nav("./login")
+        nav("/home") 
     }
 
     return (
+        <div className = "test">
         <div className = "main">
             <div className = "title">
                 <h1>SE3316 Superheroes</h1>
@@ -22,6 +24,7 @@ const Base = () => {
             <div className = "b">
                 <button className = "button" onClick = {buttonClick}>Login</button>
             </div>
+        </div>
         </div>
     );
 }

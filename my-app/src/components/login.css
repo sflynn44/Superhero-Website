@@ -2,8 +2,8 @@
     margin: auto;
     width: 50%;
     padding: 150px;
-    padding-left: 200px;
-    padding-right: 200px;
+    margin-left: 300px;
+    padding-top: 100px;
     background-color: #DCD6F7; 
     box-shadow:  0 0 10px  rgba(0,0,0,0.6);
     -moz-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
@@ -77,5 +77,38 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     background-color: #424874; 
     color: rgb(245, 245, 245);
+}
+
+.sidebar {
+    margin: 0;
+    padding: 0;
+    padding-top: 0;
+    width: 200px;
+    background-color: #424874; 
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.sidebar a {
+    display: block;
+    color: rgb(255, 255, 255);
+    padding: 16px;
+    text-decoration: none;
+}
+
+.sidebar a.selected {
+    background-color: #DCD6F7;
+    color: rgb(0, 0, 0);
+}
+
+.sidebar a:hover:not(.active) {
+    background-color: #DCD6F7;
+    color: rgb(0, 0, 0);
+}
+
+h2{
+    color:rgb(255, 255, 255);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 

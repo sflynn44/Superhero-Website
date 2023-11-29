@@ -4,11 +4,11 @@ body, html {
   height: 100%;
   background-color: #A6B1E1;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .App {
   text-align: center;
 }
+
+
 
