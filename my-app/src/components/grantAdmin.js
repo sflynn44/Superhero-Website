@@ -1,42 +1,39 @@
 import React, {useState} from "react"
 import {useNavigate} from "react-router-dom"
 import {Link} from 'react-router-dom';
-import './login.css';
+import './grantAdmin.css';
 
 
-const Login = () => {
+const Grant = () => {
     const nav = useNavigate()
 
     const [email, setE] = useState("")
-    const [passW, setP] = useState("")
     const [userE, setUE] = useState("")
-    const [passwordE, setPE] = useState("")
-    const [loginE, setLE] = useState("")
 
-    async function loginAccount(emailA, passW){
+    async function granting(email){
+
+        let admin = localStorage.getItem("email")
+        console.log(admin)
+
         try{
-            const login = await fetch('/api/users/confirmLogin', {
+            const grant = await fetch('/api/users/grantAdmin', {
         
                 method: "POST",
                   
-                body: JSON.stringify({email: emailA, passW: passW}),
+                body: JSON.stringify({email: email, adminN: admin}),
                   
                 headers: {
                     "Content-type": "application/json"
                 }
             })
-                //check the response 
-            if (!login.ok) {
-                const j = await login.json()
+            if (!grant.ok) {
+                const j = await grant.json()
                 console.log(j.message);
-                setLE(j.message)
+                setUE(j.message)
             } else{
-                const j = await login.json()
+                const j = await grant.json()
                 console.log(j.message);
-                setLE(j.message)
-
-                localStorage.setItem("jwtToken", login.jwtToken)
-                localStorage.setItem("email", email)
+                setUE(j.message)
 
                 nav('/')
             }
@@ -45,23 +42,12 @@ const Login = () => {
         }
     }
 
-    const buttonClick1 = () => {
-        nav("/createA") 
-    }
-
     const buttonClick = () => {
-        
+
         setUE("")
-        setPE("")
-        setLE("")
 
         if (email === "") {
             setUE("Please enter your email address")
-            return
-        }
-
-        if (passW === "") {
-            setPE("Please enter a password")
             return
         }
 
@@ -69,8 +55,8 @@ const Login = () => {
             setUE("Please enter a valid email")
         }
 
-        loginAccount(email, passW)
 
+        granting(email)
     }
 
     return (
@@ -82,37 +68,25 @@ const Login = () => {
                     <Link>Public Lists</Link>
                     <Link>Custom Lists</Link>
                     <Link to='/updateP'>Account Settings</Link>
-                    <Link to='/login' className = "selected">Login</Link>
+                    <Link to='/login'>Login</Link>
                     <Link to='/'>Log out</Link>
             </div>
 
             <div className = "main">
 
                 <div className = "title">
-                    <h1>Login</h1>
+                    <h1>Grant Admin Access</h1>
                 </div>
 
                 <div className = "userInput">
                     <form className = "input">
-                        <input value={email} className = "i" id = "user"autocomplete="off" placeholder=" Enter Email..." onChange={userin => setE(userin.target.value)}/>
+                        <input value={email} className = "i" id = "user"autocomplete="off" placeholder=" Enter User Email..." onChange={userin => setE(userin.target.value)}/>
                     </form>
                     <label className="error">{userE}</label>
                 </div>
 
-                <div className = "userInput">
-                    <form className = "input">
-                        <input value={passW} className = "i" id = "pass"autocomplete="off" placeholder=" Enter Password..." onChange={passin => setP(passin.target.value)}/>
-                    </form>
-                    <label className="error">{passwordE}</label>
-                </div>
-
                 <div className = "b">
                     <button className = "button" onClick = {buttonClick}>Enter</button>
-                </div>
-                <label className="error">{loginE}</label>
-
-                <div className = "b1">
-                    <button className = "button1" onClick = {buttonClick1}>Create Account</button>
                 </div>
 
             </div>
@@ -120,4 +94,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default Grant;

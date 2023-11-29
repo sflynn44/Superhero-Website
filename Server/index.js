@@ -681,10 +681,12 @@ router2.post('/grantAdmin', (req, res) => {
 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
 
-  if("administrator" !== adminTest){
+  const ad = users.users.find(user => adminTest === user.admin)
+
+  if("admin123@gmail.com" !== adminTest || ad == "No"){
+    console.log("testing")
     return res.status(400).json({message: "You do not have administrator access"})
   }
-
   const changedUser = users.users.findIndex(user => email === user.email)
 
   users.users[changedUser].admin = "Yes"

@@ -21,9 +21,8 @@ const Home = () => {
                 <Link>Search Heroes</Link>
                 <Link>Public Lists</Link>
                 <Link>Custom Lists</Link>
-                <Link to='/updateP'>Account Settings</Link>
+                <Link to='/accounts'>Account Settings</Link>
                 <Link to='/login'>Login</Link>
-                <Link>Log Out</Link>
                 <h3>{userN}</h3>
             </div>
 

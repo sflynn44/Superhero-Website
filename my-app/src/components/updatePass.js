@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import {useNavigate} from "react-router-dom"
+import {Link} from 'react-router-dom';
 import './updatePass.css';
 
 const UpdatePass = () => {
@@ -41,35 +42,49 @@ const UpdatePass = () => {
     }
 
     return(
-        <div className = "main">
 
-            <div className = "title">
-                <h1>Update Password</h1>
+        <div className = "base">
+
+            <div className ="sidebar">
+                <h2>Site Operations</h2>
+                <Link>Search Heroes</Link>
+                <Link>Public Lists</Link>
+                <Link>Custom Lists</Link>
+                <Link to='/accounts' className = "selected">Account Settings</Link>
+                <Link to='/login'>Login</Link>
             </div>
 
-            <div className = "passInput">
-                <form className = "input">
-                    <input value={oldPass} className = "i" id = "user"autocomplete="off" placeholder=" Enter Current Password..." onChange={oldP => setP(oldP.target.value)}/>
-                </form>
-                <label className="error">{passwordE1}</label>
-            </div>
+            <div className = "main">
 
-            <div className = "passInput">
-                <form className = "input">
-                    <input value={newPass} className = "i" id = "user"autocomplete="off" placeholder=" Enter New Password..." onChange={newP => setNP(newP.target.value)}/>
-                </form>
-                <label className="error">{passwordE2}</label>
-            </div>
+                <div className = "title">
+                    <h1>Update Password</h1>
+                </div>
 
-            <div className = "passInput">
-                <form className = "input">
-                    <input value={confirmPass} className = "i" id = "user"autocomplete="off" placeholder=" Confirm New Password..." onChange={confirmP => setCP(confirmP.target.value)}/>
-                </form>
-                <label className="error">{passwordE3}</label>
-            </div>
+                <div className = "passInput">
+                    <form className = "input">
+                        <input value={oldPass} className = "i" id = "user"autocomplete="off" placeholder=" Enter Current Password..." onChange={oldP => setP(oldP.target.value)}/>
+                    </form>
+                    <label className="error">{passwordE1}</label>
+                </div>
 
-            <div className = "b">
-                <button className = "button" onClick = {buttonClick}>Change Password</button>
+                <div className = "passInput">
+                    <form className = "input">
+                        <input value={newPass} className = "i" id = "user"autocomplete="off" placeholder=" Enter New Password..." onChange={newP => setNP(newP.target.value)}/>
+                    </form>
+                    <label className="error">{passwordE2}</label>
+                </div>
+
+                <div className = "passInput">
+                    <form className = "input">
+                        <input value={confirmPass} className = "i" id = "user"autocomplete="off" placeholder=" Confirm New Password..." onChange={confirmP => setCP(confirmP.target.value)}/>
+                    </form>
+                    <label className="error">{passwordE3}</label>
+                </div>
+
+                <div className = "b">
+                    <button className = "button" onClick = {buttonClick}>Change Password</button>
+                </div>
+
             </div>
 
         </div>
