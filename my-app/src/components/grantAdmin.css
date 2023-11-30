@@ -87,3 +87,9 @@ option{
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     padding: 10px;
 }
+
+h3{
+    color:rgb(255, 255, 255);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: medium;
+}

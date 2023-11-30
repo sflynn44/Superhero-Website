@@ -1,0 +1,107 @@
+.sidebar {
+    margin: 0;
+    padding: 0;
+    padding-top: 0;
+    width: 200px;
+    background-color: #424874; 
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.sidebar a {
+    display: block;
+    color: rgb(255, 255, 255);
+    padding: 16px;
+    text-decoration: none;
+}
+
+.sidebar a.selected {
+    background-color: #DCD6F7;
+    color: rgb(0, 0, 0);
+}
+
+.sidebar a:hover:not(.active) {
+    background-color: #DCD6F7;
+    color: rgb(0, 0, 0);
+}
+
+h2{
+    color:rgb(255, 255, 255);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.mains{
+    margin: auto;
+    width: 70%;
+    padding: 50px;
+    margin-left: 230px;
+    padding-top: 20px;
+    background-color: #DCD6F7; 
+    box-shadow:  0 0 10px  rgba(0,0,0,0.6);
+    -moz-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    -o-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    border-radius: 20px; 
+    text-align: center;
+}
+
+.in{
+    border: 1px solid #000000;
+    border-radius: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: 200px; 
+    padding: 10px;
+}
+
+.in::placeholder {
+    color: #000000; 
+}
+
+.inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 15px;
+    padding-top: 25px;  
+}
+
+.input{
+    margin-right: 10px;
+}
+
+.button{
+    padding: 14px 40px;;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    margin-right: 10px;
+    width: 140px;
+    font-size: 16px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.button:hover {
+    background-color: #424874; 
+    color: rgb(245, 245, 245);
+}
+
+.innerL{
+    display: inline-block;
+    width: 90%; 
+    border: 1px solid #ccc; 
+    background-color: #f4f1ff; 
+    box-shadow:  0 0 10px  rgba(0,0,0,0.6);
+    -moz-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    -o-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    border-radius: 25px;
+    justify-content: space-evenly;  
+    margin: 10px;
+    text-align: center;
+    padding: 0; 
+    padding-top: 20px;
+    padding-bottom: 20px;
+    list-style-type: none; 
+}
+
+

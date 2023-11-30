@@ -18,7 +18,7 @@ const Home = () => {
 
             <div className ="sidebar">
                 <h2>Site Operations</h2>
-                <Link>Search Heroes</Link>
+                <Link to='/search'>Search Heroes</Link>
                 <Link>Public Lists</Link>
                 <Link>Custom Lists</Link>
                 <Link to='/accounts'>Account Settings</Link>

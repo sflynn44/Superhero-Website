@@ -6,6 +6,12 @@ import './createAccount.css';
 const CreateAccount = () => {
     const nav = useNavigate()
 
+    let userName = localStorage.getItem("email")
+
+    if(userName == "admin123@gmail.com"){
+        userName = "Admin"
+    }
+
     const [userN, setUN] = useState("")
     const [emailA, setEA] = useState("")
     const [passW, setP] = useState("")
@@ -80,12 +86,12 @@ const CreateAccount = () => {
 
             <div className ="sidebar">
                 <h2>Site Operations</h2>
-                <Link>Search Heroes</Link>
+                <Link to='/search'>Search Heroes</Link>
                 <Link>Public Lists</Link>
                 <Link>Custom Lists</Link>
-                <Link to='/updateP'>Account Settings</Link>
+                <Link to='/accountS'>Account Settings</Link>
                 <Link to='/login'>Login</Link>
-                <Link>Log Out</Link>
+                <h3>{userName}</h3>
             </div>
 
             <div className = "main">

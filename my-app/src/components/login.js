@@ -7,6 +7,12 @@ import './login.css';
 const Login = () => {
     const nav = useNavigate()
 
+    let userN = localStorage.getItem("email")
+
+    if(userN == "admin123@gmail.com"){
+        userN = "Admin"
+    }
+
     const [email, setE] = useState("")
     const [passW, setP] = useState("")
     const [userE, setUE] = useState("")
@@ -84,12 +90,12 @@ const Login = () => {
         <div className = "base">
             <div className ="sidebar">
                     <h2>Site Operations</h2>
-                    <Link>Search Heroes</Link>
+                    <Link to='/search'>Search Heroes</Link>
                     <Link>Public Lists</Link>
                     <Link>Custom Lists</Link>
-                    <Link to='/updateP'>Account Settings</Link>
+                    <Link to='/accountS'>Account Settings</Link>
                     <Link to='/login' className = "selected">Login</Link>
-                    <Link to='/'>Log out</Link>
+                    <h3>{userN}</h3>
             </div>
 
             <div className = "main">

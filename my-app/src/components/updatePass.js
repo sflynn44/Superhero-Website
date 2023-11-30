@@ -6,6 +6,12 @@ import './updatePass.css';
 const UpdatePass = () => {
     const nav = useNavigate()
 
+    let userN = localStorage.getItem("email")
+
+    if(userN == "admin123@gmail.com"){
+        userN = "Admin"
+    }
+
     const [oldPass, setP] = useState("")
     const [newPass, setNP] = useState("")
     const [confirmPass, setCP] = useState("")
@@ -50,8 +56,9 @@ const UpdatePass = () => {
                 <Link>Search Heroes</Link>
                 <Link>Public Lists</Link>
                 <Link>Custom Lists</Link>
-                <Link to='/accounts' className = "selected">Account Settings</Link>
+                <Link to='/accountS' className = "selected">Account Settings</Link>
                 <Link to='/login'>Login</Link>
+                <h3>{userN}</h3>
             </div>
 
             <div className = "main">

@@ -7,6 +7,12 @@ import './accountSetting.css';
 const Account = () => {
     const nav = useNavigate()
 
+    let userN = localStorage.getItem("email")
+
+    if(userN == "admin123@gmail.com"){
+        userN = "Admin"
+    }
+
     const buttonClick = () => {
         nav('/updateP')
     }
@@ -27,11 +33,12 @@ const Account = () => {
 
             <div className ="sidebar">
                     <h2>Site Operations</h2>
-                    <Link>Search Heroes</Link>
+                    <Link to='/search'>Search Heroes</Link>
                     <Link>Public Lists</Link>
                     <Link>Custom Lists</Link>
-                    <Link to='/accounts' className = "selected">Account Settings</Link>
+                    <Link to='/accountS' className = "selected">Account Settings</Link>
                     <Link to='/login'>Login</Link>
+                    <h3>{userN}</h3>
             </div>
 
             <div className = "main">
