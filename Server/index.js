@@ -632,9 +632,9 @@ router2.post('/confirmLogin', (req, res) => {
     return res.status(400).json({message: "User account is disabled. Please contact the administrator. "})
   }
 
-  // if(user.verification == "Unverified"){
-  //   return res.status(400).json({message: "Email has not been verified"})
-  // }
+  if(user.verification == "Unverified"){
+    return res.status(400).json({message: "Email has not been verified"})
+  }
 
   const hashedPassword = user.password
 
@@ -665,6 +665,10 @@ router2.post('/emailConfirmation/:email', (req, res) => {
   const users = JSON.parse(fs.readFileSync(`users.json`))  
   const user = users.users.findIndex(user => email === user.email)
 
+  if(!user){
+    return res.status(400).json({message: "No user with that email exists"})
+  }
+
   users.users[user].verification = "Verified"
 
   fs.writeFileSync(`users.json`, JSON.stringify(users))
@@ -679,6 +683,8 @@ router2.post('/grantAdmin', (req, res) => {
   const email = req.body.email
   const adminTest = req.body.adminN
 
+  console.log(email)
+
   const users = JSON.parse(fs.readFileSync(`users.json`))  
 
   const ad = users.users.find(user => adminTest === user.admin)
@@ -687,6 +693,11 @@ router2.post('/grantAdmin', (req, res) => {
     return res.status(400).json({message: "You do not have administrator access"})
   }
   const changedUser = users.users.findIndex(user => email === user.email)
+  console.log(changedUser)
+
+  if(!changedUser){
+    return res.status(400).json({message: "No user with that email exists"})
+  }
 
   users.users[changedUser].admin = "Yes"
 
@@ -711,6 +722,10 @@ router2.post('/deactivate', (req, res) => {
     return res.status(400).json({message: "You do not have administrator access"})
   }
   const changedUser = users.users.findIndex(user => email === user.email)
+
+  if(!changedUser){
+    return res.status(400).json({message: "No user with that email exists"})
+  }
 
   if(type == "deactiveate"){
     users.users[changedUser].status = "Deactiveated"

@@ -27,7 +27,11 @@ const CreateAccount = () => {
                 }
             })
             if (!create.ok) {
-                console.log("error")
+                const j = await create.json()
+                console.log("Response:", j.message);
+                setCE(j.message)
+                
+            }else{
                 const j = await create.json()
                 console.log("Response:", j.message);
                 setCE(j.message)

@@ -12,6 +12,7 @@ const Login = () => {
     const [userE, setUE] = useState("")
     const [passwordE, setPE] = useState("")
     const [loginE, setLE] = useState("")
+    const [verify, setV] = useState("")
 
     async function loginAccount(emailA, passW){
         try{
@@ -25,11 +26,16 @@ const Login = () => {
                     "Content-type": "application/json"
                 }
             })
-                //check the response 
+            //check the response 
             if (!login.ok) {
                 const j = await login.json()
                 console.log(j.message);
                 setLE(j.message)
+
+                if(j.message == "Email has not been verified"){
+                    setV(`Please click on the link to verify email`);
+                }
+
             } else{
                 const j = await login.json()
                 console.log(j.message);
@@ -110,6 +116,12 @@ const Login = () => {
                     <button className = "button" onClick = {buttonClick}>Enter</button>
                 </div>
                 <label className="error">{loginE}</label>
+                {verify && (
+                    <div className="verifyLink">
+                        <p>{verify}</p>
+                        <Link to={`/api/users/emailConfirmation/${email}`}>Verify Email</Link>
+                    </div>
+                )}
 
                 <div className = "b1">
                     <button className = "button1" onClick = {buttonClick1}>Create Account</button>
