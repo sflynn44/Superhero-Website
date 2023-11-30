@@ -42,6 +42,38 @@ const Grant = () => {
         }
     }
 
+    async function deactivating(email, type){
+
+        let admin = localStorage.getItem("email")
+        console.log(admin)
+
+        try{
+            const grant = await fetch('/api/users/deactivate', {
+        
+                method: "POST",
+                  
+                body: JSON.stringify({email: email, adminN: admin, type: type}),
+                  
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            if (!grant.ok) {
+                const j = await grant.json()
+                console.log(j.message);
+                setUE(j.message)
+            } else{
+                const j = await grant.json()
+                console.log(j.message);
+                setUE(j.message)
+
+                nav('/accountS')
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
     const buttonClick = () => {
 
         setUE("")
@@ -53,10 +85,23 @@ const Grant = () => {
 
         if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)){
             setUE("Please enter a valid email")
+            return
         }
 
+        let selectedType = document.getElementById("dropdown").value
 
-        granting(email)
+        if(selectedType.trim() === ""){
+          setUE("Select Action Type")
+          return
+        }
+
+        if(selectedType == "grant"){
+            granting(email)
+        }else if(selectedType == "DE"){
+            deactivating(email, "deactiveate")
+        }else if(selectedType == "A"){
+            deactivating(email, "active")
+        }
     }
 
     return (
@@ -75,7 +120,7 @@ const Grant = () => {
             <div className = "main">
 
                 <div className = "title">
-                    <h1>Grant Admin Access</h1>
+                    <h1>Alter User Accounts</h1>
                 </div>
 
                 <div className = "userInput">
@@ -84,6 +129,13 @@ const Grant = () => {
                     </form>
                     <label className="error">{userE}</label>
                 </div>
+
+                <select class="drops" id ="dropdown">
+                    <option id ="selectedText" value=""disabled selected>Actions</option>
+                    <option value="grant">Grant Admin</option>
+                    <option value="DE">Deactivate User</option>
+                    <option value="A">Activate User</option>
+                </select>
 
                 <div className = "b">
                     <button className = "button" onClick = {buttonClick}>Enter</button>

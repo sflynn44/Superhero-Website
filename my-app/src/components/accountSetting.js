@@ -45,7 +45,7 @@ const Account = () => {
                 </div>
 
                 <div className = "b">
-                    <button className = "button" onClick = {buttonClick1}>Add Admin Status</button>
+                    <button className = "button" onClick = {buttonClick1}>Admin Abilities</button>
                 </div>
 
                 <div className = "b">

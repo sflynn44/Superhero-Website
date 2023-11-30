@@ -684,7 +684,6 @@ router2.post('/grantAdmin', (req, res) => {
   const ad = users.users.find(user => adminTest === user.admin)
 
   if("admin123@gmail.com" !== adminTest || ad == "No"){
-    console.log("testing")
     return res.status(400).json({message: "You do not have administrator access"})
   }
   const changedUser = users.users.findIndex(user => email === user.email)
@@ -696,6 +695,35 @@ router2.post('/grantAdmin', (req, res) => {
   return res.status(200).json({message: "Administrator permissions have been given"})
 
 })
+
+
+router2.post('/deactivate', (req, res) => {
+
+  const email = req.body.email
+  const adminTest = req.body.adminN
+  const type = req.body.type
+
+  const users = JSON.parse(fs.readFileSync(`users.json`))  
+
+  const ad = users.users.find(user => adminTest === user.admin)
+
+  if("admin123@gmail.com" !== adminTest || ad == "No"){
+    return res.status(400).json({message: "You do not have administrator access"})
+  }
+  const changedUser = users.users.findIndex(user => email === user.email)
+
+  if(type == "deactiveate"){
+    users.users[changedUser].status = "Deactiveated"
+  } else if(type == "active"){
+    users.users[changedUser].status = "Active"
+  }
+
+  fs.writeFileSync(`users.json`, JSON.stringify(users))
+
+  return res.status(200).json({message: "This user has been deactivated"})
+
+})
+
 
 
 
