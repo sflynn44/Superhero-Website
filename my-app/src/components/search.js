@@ -28,7 +28,6 @@ const Search = () => {
         const outerList = document.createElement("ul");
         outerList.classList.add('outerList')
         
-      
         data.forEach(e =>{
           const innerList = document.createElement("ul");
           innerList.classList.add('innerL')
@@ -40,6 +39,51 @@ const Search = () => {
             innerList.appendChild(item)
             }
           }
+          const powerButton = document.createElement("button");
+          const buttonText = document.createTextNode("Powers");
+          powerButton.appendChild(buttonText);
+          powerButton.classList.add('powerButton')
+
+          powerButton.addEventListener('click', async function () {
+
+            const heroName = e["name"];
+               
+                try{
+                    const s = await fetch(`/api/heroes/${heroName}`)
+        
+                    if (!s.ok) {
+                        const j = await s.json()
+                        console.log(j.message);
+                        setE(j.message)                  
+        
+                    } else{
+                        const j = await s.json()
+                        console.log(j)
+                        const parentList = powerButton.parentElement; 
+
+                        j.forEach(obj => {
+                            for(const key in obj){
+                                const items = document.createElement('li')
+                                items.appendChild(document.createTextNode(obj[key].join(', ')))
+                                parentList.append(items);
+                            }
+                        })
+                        const closeButton = document.createElement("button");
+                        const buttonText = document.createTextNode("Close");
+                        closeButton.appendChild(buttonText);
+                        closeButton.classList.add('powerButton')
+
+                        innerList.appendChild(closeButton)
+
+                                              
+                    }
+                }catch(error){
+                    console.log(`Error message: ${error}`)
+                }
+
+          })
+          innerList.appendChild(powerButton)
+    
           outerList.appendChild(innerList)
         })
         d.appendChild(outerList)
@@ -68,7 +112,6 @@ const Search = () => {
                 const j = await s.json()
                 
                 console.log(j)
-                
                 displayResults(j)
                 
             }
@@ -78,6 +121,8 @@ const Search = () => {
     }
 
     const buttonClick = () => {
+        setE("")                  
+
         searching(name, race, pub, power)
     }
 
@@ -89,7 +134,7 @@ const Search = () => {
                 <Link to='/search' className = "selected">Search Heroes</Link>
                 <Link>Public Lists</Link>
                 <Link>Custom Lists</Link>
-                <Link to='/updateP'>Account Settings</Link>
+                <Link to='/accountS'>Account Settings</Link>
                 <Link to='/login'>Login</Link>
                 <h3>{userN}</h3>
             </div>

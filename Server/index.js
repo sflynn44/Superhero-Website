@@ -122,12 +122,12 @@ router.get('/publisher', (req, res) => {
   
 
 // Get a heroes powers by their ID
-router.get('/:id', (req, res) => {
+router.get('/:name', (req, res) => {
 
     const customList = []
     //read the id into int and search for the hero that matches it
-    const heroId = parseInt(req.params.id,10);
-    const hero = data.find(hero => hero.id === heroId);
+    const heroName = req.params.name
+    const hero = data.find(hero => hero.name === heroName);
 
     //if the hero is found return it and if not state the error
     if (hero) {
@@ -198,6 +198,13 @@ router2.post('/searchHeroes', (req, res) => {
   const raceR = req.body.raceR.toLowerCase()
   const pubR = req.body.publisherR.toLowerCase()
   const powerR = req.body.powerR
+
+  //alter the power to not be case sensitive 
+  const firstLetPower = powerR.charAt(0)
+  const upperFLP = firstLetPower.toUpperCase()
+  const remainingP = powerR.slice(1)
+  const newPowerR = upperFLP + remainingP
+
   //copy all of the data
   let results = data
 
@@ -217,13 +224,13 @@ router2.post('/searchHeroes', (req, res) => {
   }
 
   //if there is input in the power category filter the heroes for the power 
-  if (powerR !== ""){
+  if (newPowerR !== ""){
 
     //if all the other search fields are empty search for powers from power array
     if(nameR == "" && raceR == "" && pubR == ""){
       
       //get all the power objects where the input power is true 
-      const pResults = power.filter(p => p[powerR] === "True");
+      const pResults = power.filter(p => p[newPowerR] === "True");
 
       //if the power objects exist
       if(pResults.length > 0){
@@ -232,6 +239,7 @@ router2.post('/searchHeroes', (req, res) => {
        
         //if the hero names exist 
         if(hResults.length > 0){
+
           //create the temp list 
           powerResult = []
 
@@ -260,7 +268,7 @@ router2.post('/searchHeroes', (req, res) => {
         const powers = power.find(p => p.hero_names === names[i]);
 
         //if it exists and the designated power is equal to true 
-        if (powers && powers[powerR] === "True") {
+        if (powers && powers[newPowerR] === "True") {
 
               //push the hero names that have that power equal to true
               pow.push(names[i]);
@@ -274,10 +282,9 @@ router2.post('/searchHeroes', (req, res) => {
 
         }
         //set results equal to the power filter results 
-        results = powerResults 
+        results = powerResults[0] 
       }
     }
-
   }
 
   //if results are found send them 

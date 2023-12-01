@@ -104,4 +104,16 @@ h2{
     list-style-type: none; 
 }
 
+.powerButton{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    width: 100px;
+    padding: 5px;
+    margin-top: 5px; 
+    margin-bottom: 5px; 
+    background-color: #424874; 
+    color: rgb(245, 245, 245);
+}
+
 
