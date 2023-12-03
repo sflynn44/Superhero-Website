@@ -13,6 +13,18 @@
     text-align: center;
 }
 
+.in{
+    border: 1px solid #000000;
+    border-radius: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    width: 200px; 
+    padding: 10px;
+}
+
+.in::placeholder {
+    color: #000000; 
+}
+
 .inputs {
     display: flex;
     align-items: center;
