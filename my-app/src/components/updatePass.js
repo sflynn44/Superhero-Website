@@ -19,6 +19,41 @@ const UpdatePass = () => {
     const [passwordE2, setPE2] = useState("")
     const [passwordE3, setPE3] = useState("")
 
+
+    async function updating(userN, oldPass, newPass, confirmPass){
+
+        let token = localStorage.getItem("jwtToken");
+
+        try{
+            const update = await fetch('/api/auth/updatePassword', {
+        
+                method: "POST",
+                  
+                body: JSON.stringify({email: userN, oldPass: oldPass, newPass: newPass, confirmPass: confirmPass}),
+                  
+                headers: {
+                    "Content-type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            if (!update.ok) {
+                const j = await update.json()
+                console.log(j.message);
+                setPE3(j.message)
+            } else{
+                const j = await update.json()
+                console.log(j.message);
+                setPE3(j.message)
+
+                nav('/accountS')
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
+
+
     const buttonClick = () => {
 
         setPE1("")
@@ -44,7 +79,9 @@ const UpdatePass = () => {
             setPE3("Please enter the same password")
             return
         }
-        
+
+        updating(userN, oldPass, newPass, confirmPass)
+            
     }
 
     return(

@@ -147,12 +147,13 @@ const Search = () => {
 
         searchButton.addEventListener('click', async function () {
             const heroName = e["name"];
+            const publisher = e["Publisher"]
 
-            const heroN = encodeURIComponent(heroName)
+            const search = encodeURIComponent(heroName+" "+publisher)
         
             try {
                 
-                window.open(`https://duckduckgo.com/${heroN}`, "_blank")
+                window.open(`https://duckduckgo.com/${search}`, "_blank")
                 
             } catch (error) {
                 console.log(`Error message: ${error}`)

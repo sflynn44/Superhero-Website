@@ -703,7 +703,6 @@ router3.post('/grantAdmin', (req, res) => {
     return res.status(400).json({message: "You do not have administrator access"})
   }
   const changedUser = users.users.findIndex(user => email === user.email)
-  console.log(changedUser)
 
   if(!changedUser){
     return res.status(400).json({message: "No user with that email exists"})
@@ -747,6 +746,56 @@ router3.post('/deactivate', (req, res) => {
 
   return res.status(200).json({message: "This user has been deactivated"})
 
+})
+
+
+
+
+router3.post('/updatePassword', (req, res) => {
+
+  const oldPass = req.body.oldPass
+  const newPass = req.body.newPass
+  const confirmPass = req.body.confirmPass
+  const email = req.body.email 
+
+  const users = JSON.parse(fs.readFileSync(`users.json`))  
+  const user = users.users.findIndex(user => email === user.email)
+
+  if(!user){
+    return res.status(400).json({message: "No user with that email exists"})
+  }
+
+  if (newPass != confirmPass){ 
+    return res.status(400).json({message: "Passwords do not match"})
+  }
+
+  const storedHashedPassword = users.users[user].password;
+
+  bcrypt.compare(oldPass, storedHashedPassword, (error, result) => {
+    
+    if(error) {
+      return res.status(500).json({ message: "Error during password comparison" });
+
+    } else if (!result) {
+      return res.status(400).json({ message: "Old password is incorrect" });
+
+    } else if(result){
+
+      bcrypt.hash(newPass,10,(error, hashedPass) => {
+
+        if (error) {
+          return res.status(400).json({message: "Error during hashing "})
+        }else{
+        users.users[user].password = hashedPass
+
+        fs.writeFileSync(`users.json`, JSON.stringify(users))
+
+        return res.status(200).json({message: "Password has been changed."})
+        }
+      })
+    }
+
+  })
 })
 
 
