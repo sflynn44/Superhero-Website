@@ -47,7 +47,8 @@ const Login = () => {
                 console.log(j.message);
                 setLE(j.message)
 
-                localStorage.setItem("jwtToken", login.jwtToken)
+                console.log(j.jwtToken)
+                localStorage.setItem("jwtToken", j.jwtToken);
                 localStorage.setItem("email", email)
 
                 nav('/')

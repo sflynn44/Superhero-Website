@@ -9,19 +9,23 @@ const router2 = express.Router()
 const router3 = express.Router()
 const bodyParser = require('body-parser');
 const jwt = require("jsonwebtoken");
-
-//connecting to frontend 
-app.use('/', express.static('my-app'));
-
 require('dotenv').config();
 
-const secretkeyJWT = process.env.jwtSecretkey;
+app.use('/', express.static('my-app'));
 
 const verify = (req, res, next) => {
 
-  const token = req.headers.authorization 
+  let token = req.headers.authorization 
+  console.log(token)
+  
+  if (!token) {
+    return res.status(401).json({ message: 'Authorization header is missing' });
+  }
 
-  jwt.verify(token, secretkeyJWT, (error, userData) => {
+  token = token.split(' ')[1];
+  console.log(token)
+
+  jwt.verify(token, process.env.JWT_SECRET, (error, userData) => {
 
     if(error){
       return res.status(401).json({ message: 'Issue with verification'});
@@ -29,9 +33,7 @@ const verify = (req, res, next) => {
       req.user = userData
       next()
     }
-
   })
-
 }
 
 router3.use(verify)
@@ -655,7 +657,7 @@ router2.post('/confirmLogin', (req, res) => {
 
       const admin = user.admin
       let jwtData = {email, admin};
-      const jwtToken = jwt.sign(jwtData, jwtSecretkey)
+      const jwtToken = jwt.sign(jwtData, process.env.JWT_SECRET, {expiresIn: "1h",});
       return res.status(200).json({message: "Successful login", jwtToken})
 
   } else {
@@ -686,7 +688,7 @@ router2.post('/emailConfirmation/:email', (req, res) => {
 })
 
 
-router2.post('/grantAdmin', (req, res) => {
+router3.post('/grantAdmin', (req, res) => {
 
   const email = req.body.email
   const adminTest = req.body.adminN
@@ -716,7 +718,7 @@ router2.post('/grantAdmin', (req, res) => {
 })
 
 
-router2.post('/deactivate', (req, res) => {
+router3.post('/deactivate', (req, res) => {
 
   const email = req.body.email
   const adminTest = req.body.adminN

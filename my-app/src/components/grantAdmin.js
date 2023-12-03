@@ -19,17 +19,18 @@ const Grant = () => {
     async function granting(email){
 
         let admin = localStorage.getItem("email")
-        console.log(admin)
+        let token = localStorage.getItem("jwtToken");
 
         try{
-            const grant = await fetch('/api/users/grantAdmin', {
+            const grant = await fetch('/api/auth/grantAdmin', {
         
                 method: "POST",
                   
                 body: JSON.stringify({email: email, adminN: admin}),
                   
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 }
             })
             if (!grant.ok) {
