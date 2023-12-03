@@ -1,36 +1,3 @@
-.sidebar {
-    margin: 0;
-    padding: 0;
-    padding-top: 0;
-    width: 200px;
-    background-color: #424874; 
-    position: fixed;
-    height: 100%;
-    overflow: auto;
-}
-
-.sidebar a {
-    display: block;
-    color: rgb(255, 255, 255);
-    padding: 16px;
-    text-decoration: none;
-}
-
-.sidebar a.selected {
-    background-color: #DCD6F7;
-    color: rgb(0, 0, 0);
-}
-
-.sidebar a:hover:not(.active) {
-    background-color: #DCD6F7;
-    color: rgb(0, 0, 0);
-}
-
-h2{
-    color:rgb(255, 255, 255);
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
-
 .mains{
     margin: auto;
     width: 70%;
@@ -44,18 +11,6 @@ h2{
     -o-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
     border-radius: 20px; 
     text-align: center;
-}
-
-.in{
-    border: 1px solid #000000;
-    border-radius: 10px;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    width: 200px; 
-    padding: 10px;
-}
-
-.in::placeholder {
-    color: #000000; 
 }
 
 .inputs {
