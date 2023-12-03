@@ -143,8 +143,21 @@ const Search = () => {
                 console.log(`Error message: ${error}`)
             }
         });
-              
+            
 
+        searchButton.addEventListener('click', async function () {
+            const heroName = e["name"];
+
+            const heroN = encodeURIComponent(heroName)
+        
+            try {
+                
+                window.open(`https://duckduckgo.com/${heroN}`, "_blank")
+                
+            } catch (error) {
+                console.log(`Error message: ${error}`)
+            }
+        });
 
 
           innerList.appendChild(powerButton)
