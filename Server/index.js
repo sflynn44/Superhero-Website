@@ -13,14 +13,15 @@ const jwt = require("jsonwebtoken");
 //connecting to frontend 
 app.use('/', express.static('my-app'));
 
-const jwtSecretkey = "tfmmfspfasdafjnjn"
+require('dotenv').config();
 
+const secretkeyJWT = process.env.jwtSecretkey;
 
 const verify = (req, res, next) => {
 
   const token = req.headers.authorization 
 
-  jwt.verify(token, jwtSecretkey, (error, userData) => {
+  jwt.verify(token, secretkeyJWT, (error, userData) => {
 
     if(error){
       return res.status(401).json({ message: 'Issue with verification'});
@@ -162,10 +163,10 @@ router.get('/:name', (req, res) => {
 
 
 //Get a heroes information from their ID
-router.get('/:id/information', (req, res) => {
+router.get('/:name/information', (req, res) => {
   //read the id into int and search for the hero that matches it
-  const heroId = parseInt(req.params.id, 10);
-  const hero = data.find(hero => hero.id === heroId);
+  const heroName = req.params.name;
+  const hero = data.find(hero => hero.name === heroName);
 
   const array = []
 

@@ -44,6 +44,16 @@ const Search = () => {
           powerButton.appendChild(buttonText);
           powerButton.classList.add('powerButton')
 
+          const infoButton = document.createElement("button");
+          const buttonTexts = document.createTextNode("Info");
+          infoButton.appendChild(buttonTexts);
+          infoButton.classList.add('powerButton')
+
+          const searchButton = document.createElement("button");
+          const buttonsTexts = document.createTextNode("Search DDG");
+          searchButton.appendChild(buttonsTexts);
+          searchButton.classList.add('powerButton')
+
           powerButton.addEventListener('click', async function () {
 
             const heroName = e["name"];
@@ -65,24 +75,81 @@ const Search = () => {
                             for(const key in obj){
                                 const items = document.createElement('li')
                                 items.appendChild(document.createTextNode(obj[key].join(', ')))
+
+                                const closeButton = document.createElement("button");
+                                const buttonText = document.createTextNode("Close");
+                                closeButton.appendChild(buttonText);
+                                closeButton.classList.add('powerButton')
+
+                                closeButton.addEventListener('click', function () {
+
+                                    parentList.removeChild(items)
+                                    
+                                });
+
+                                items.appendChild(closeButton);
                                 parentList.append(items);
                             }
                         })
-                        const closeButton = document.createElement("button");
-                        const buttonText = document.createTextNode("Close");
-                        closeButton.appendChild(buttonText);
-                        closeButton.classList.add('powerButton')
-
-                        innerList.appendChild(closeButton)
-
-                                              
+                                                                      
                     }
                 }catch(error){
                     console.log(`Error message: ${error}`)
                 }
 
           })
+
+
+          infoButton.addEventListener('click', async function () {
+            const heroName = e["name"];
+        
+            try {
+                const s = await fetch(`/api/heroes/${heroName}/information`)
+        
+                if (!s.ok) {
+                    const j = await s.json()
+                    console.log(j.message);
+                    setE(j.message)
+        
+                } else {
+                    const j = await s.json()
+                    console.log(j)
+                    const parentList = infoButton.parentElement;
+        
+                    const items = document.createElement('li');
+
+                    j.forEach(obj => {
+                        for (const key in obj) {
+                            items.appendChild(document.createTextNode(`${key}: ${e[key]}\n`));
+                            items.appendChild(document.createElement('br'));
+                        }
+                    });
+
+                    parentList.append(items);
+        
+                    const closeButton = document.createElement("button");
+                    const buttonText = document.createTextNode("Close");
+                    closeButton.appendChild(buttonText);
+                    closeButton.classList.add('powerButton');
+        
+                    closeButton.addEventListener('click', function () {
+                        parentList.removeChild(items);
+                        parentList.removeChild(closeButton)
+                    });
+        
+                    parentList.append(closeButton);
+                }
+            } catch (error) {
+                console.log(`Error message: ${error}`)
+            }
+        });
+              
+
+
+
           innerList.appendChild(powerButton)
+          innerList.appendChild(infoButton)
+          innerList.appendChild(searchButton)
     
           outerList.appendChild(innerList)
         })
