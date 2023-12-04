@@ -14,6 +14,8 @@ const Custom = () => {
     const [ids, setI] = useState("")
     const [error, setE] = useState("")
     const [listsNames, setDO] = useState([]);
+    const [title, setT] = useState("")
+    const [listData, setData] = useState([]);
 
     if(userN == "admin123@gmail.com"){
         userN = "Admin"
@@ -22,6 +24,12 @@ const Custom = () => {
     function selected(event){
         setSA(event.target.value);
         populateList(userN)
+    }
+
+    function selectedTitle(event){
+        const selectTitle = event.target.value;
+        setT(selectTitle);
+        showList(selectTitle);
     }
 
     async function populateList(){
@@ -43,6 +51,8 @@ const Custom = () => {
                 setE(j.message)
             } else{
                 const j = await populate.json()
+
+                setDO([]);
 
                 const files = j.files
                 files.forEach(item => {
@@ -83,8 +93,6 @@ const Custom = () => {
         }
     }
 
-
-
     function adjustList(title, operation){
         if (operation === 'True') {
             setDO(lists => [...lists, { text: title, value: title }]);
@@ -92,6 +100,38 @@ const Custom = () => {
             setDO(lists => lists.filter(option => option.text !== title));
         }
     }
+
+
+    async function showList(selectTitle){
+
+        try{
+            const info = await fetch('/api/heroes/getListInfo', {
+        
+                method: "POST",
+                  
+                body: JSON.stringify({title: selectTitle}),
+                  
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            if (!info.ok) {
+                const j = await info.json()
+                console.log(j.message);
+                setE(j.message)
+            } else{
+                const j = await info.json()
+                console.log(j)
+
+                setData(j)
+
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
+
 
     const buttonClick = () => {
         setE("")                  
@@ -112,7 +152,6 @@ const Custom = () => {
             return
         }
   
-        console.log(ids)
         createList(ids)
         adjustList(name,"True")
     }
@@ -133,7 +172,7 @@ const Custom = () => {
 
             <div className = "mains">
 
-                <div className = "">
+                <div className = "test">
 
                     <h2>Custom List Actions</h2>
 
@@ -141,6 +180,7 @@ const Custom = () => {
                         <option id ="selectedText" value=""disabled selected>Actions</option>
                         <option value="create">Create List</option>
                         <option value="show">Show Lists</option>
+                        <option value="edit">Edit Lists</option>
                         <option value="review">Review a List</option>
                     </select>
                 </div>
@@ -179,6 +219,37 @@ const Custom = () => {
 
                     </div>
                 )}
+
+
+
+                {selectAction ==='show' && (
+                    <div className="selectedAction">
+                        <h4>Select Current List</h4>
+
+                        <select className="drop" id="dropdown" value={title} onChange={selectedTitle}>
+                            <option id ="selectedText" value=""disabled selected>List Names</option>
+                            {listsNames.map(list => (
+                                <option key={list.value} value={list.value}>{list.text}</option>
+                            ))}
+                        </select>
+
+                        {listData && (
+                            <div>
+                                <h4>List information</h4>
+
+                                <ul className="innerL">
+                                    {listData.map((item) => (
+                                        <li key={Object.keys(item)[0]}>
+                                        <strong>{Object.keys(item)[0]}:</strong> {JSON.stringify(Object.values(item)[0][0])}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+
 
             </div>   
         </div>    

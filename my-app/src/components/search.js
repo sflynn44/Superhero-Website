@@ -86,7 +86,7 @@ const Search = () => {
                                     parentList.removeChild(items)
                                     
                                 });
-
+                                
                                 items.appendChild(closeButton);
                                 parentList.append(items);
                             }

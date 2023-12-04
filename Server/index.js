@@ -600,7 +600,23 @@ router.post('/lists/j', (req, res) => {
 
 
 
+router.post('/getListInfo', (req, res) => {
 
+  const title = req.body.title
+  console.log(title)
+
+  //if the list does not exist send error message 
+  if(!fs.existsSync(`Lists/${title}.json`)){
+    return res.status(400).json({message: "List does not exists"})
+  }
+
+  //get the data from the specified list 
+  const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+  console.log(currentData)
+
+  res.json(currentData)
+
+})
 
 
 
