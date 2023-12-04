@@ -8,6 +8,7 @@ const router = express.Router()
 const router2 = express.Router()
 const router3 = express.Router()
 const bodyParser = require('body-parser');
+const path = require('path');
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 
@@ -370,10 +371,14 @@ router.get('/search/getPowers/:powers/:num', (req, res) => {
 //create a custom list 
 router.post('/createList', (req, res) => {
 
+  console.log(req.body)
+
   //get the name, owner, and description for the new list 
   const newName = req.body.newName; 
   const owner = req.body.owner; 
   const description = req.body.des; 
+  const IDs = req.body.IDs; 
+
 
   //if either required fields are empty send an error message 
   if (newName === "" || owner === "") {
@@ -400,7 +405,8 @@ router.post('/createList', (req, res) => {
     {"Owner": [owner]},
     {"View": ["private"]},
     {"Description": [description]},
-    {"IDs": []}
+    {"Reviews": []},
+    {"IDs": [IDs]}
   ]
 
   //create the list with the specified name anad send confirmation message 
@@ -566,13 +572,27 @@ router.get("/getInfo/:listName", (req, res) =>{
   res.json(customList)
 })
 
+
 //get the names of the custom lists created 
-router.get('/lists/j', (req, res) => {
+router.post('/lists/j', (req, res) => {
+
+  const username = req.body.email
+  console.log(username)
 
   //read all the files under List and then filter in the ones that end in json
   const customListNames = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'))
-  //get just the beginning name and replace .json with ''
-  const jsonFileNames = customListNames.map(file => file.replace('.json', ''))
+  
+  // Filter files based on the owner's email address
+  const userSpecificLists = customListNames.filter(file => {
+    const filePath = path.join('./Lists', file);
+    const fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    // Check if any object in the array has the specified owner
+    const hasMatchingOwner = fileContent.some(obj => obj.Owner && obj.Owner[0] === username);
+    return hasMatchingOwner;  
+  });
+
+  // Get just the beginning name and replace .json with ''
+  const jsonFileNames = userSpecificLists.map(file => file.replace('.json', ''));
   res.json({files: jsonFileNames}) 
 
 })

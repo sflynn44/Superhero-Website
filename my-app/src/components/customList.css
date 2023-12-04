@@ -1,0 +1,28 @@
+.mains{
+    margin: auto;
+    width: 85%;
+    padding: 50px;
+    margin-left: 230px;
+    padding-top: 20px;
+    background-color: #DCD6F7; 
+    box-shadow:  0 0 10px  rgba(0,0,0,0.6);
+    -moz-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    -webkit-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    -o-box-shadow: 0 0 10px  rgba(0,0,0,0.6);
+    border-radius: 20px; 
+    text-align: center;
+}
+
+.drop{
+    width: 200px;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+h4{
+    color:#424874;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: large;
+}

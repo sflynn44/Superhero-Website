@@ -20,7 +20,7 @@ const Home = () => {
                 <h2>Site Operations</h2>
                 <Link to='/search'>Search Heroes</Link>
                 <Link>Public Lists</Link>
-                <Link>Custom Lists</Link>
+                <Link to='/customL'>Custom Lists</Link>
                 <Link to='/accounts'>Account Settings</Link>
                 <Link to='/login'>Login</Link>
                 <h3>{userN}</h3>

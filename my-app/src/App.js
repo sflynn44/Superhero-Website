@@ -7,6 +7,7 @@ import Account from "./components/accountSetting"
 import Grant from "./components/grantAdmin"
 import Verify from "./components/verifyEmail"
 import Search from "./components/search"
+import Custom from "./components/customList"
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/accountS" element={<Account />}/>
           <Route path="/grantA" element = {<Grant />}/>
           <Route path="/search" element = {<Search />}/>
+          <Route path="/customL" element = {<Custom />}/>
           <Route path="/api/users/emailConfirmation/:email" element={<Verify />} />
         </Routes>
       </BrowserRouter>
