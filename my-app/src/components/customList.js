@@ -16,6 +16,7 @@ const Custom = () => {
     const [listsNames, setDO] = useState([]);
     const [title, setT] = useState("")
     const [listData, setData] = useState([]);
+    const [replace, setRE] = useState("");
 
     if(userN == "admin123@gmail.com"){
         userN = "Admin"
@@ -30,6 +31,11 @@ const Custom = () => {
         const selectTitle = event.target.value;
         setT(selectTitle);
         showList(selectTitle);
+    }
+
+    function selectedReplace(event){
+        const selectR = event.target.value;
+        setRE(selectR)
     }
 
     async function populateList(){
@@ -132,6 +138,45 @@ const Custom = () => {
     }
 
 
+    async function addHero(selectTitle, replacing, idArrays){
+
+        try{
+            const add = await fetch('/api/heroes/addHero', {
+        
+                method: "PUT",
+                  
+                body: JSON.stringify({title: selectTitle, IDs: idArrays, replace: replacing}),
+                  
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            if (!add.ok) {
+                const j = await add.json()
+                console.log(j.message);
+                setE(j.message)
+            } else{
+                const j = await add.json()
+                console.log(j.message)
+                setE(j.message)
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
+    const buttonClick1 = () => {
+        
+        console.log(title)
+        console.log(replace)
+
+        //split list of ids if more than 1 is given 
+        const idArrays = ids.split(" ")
+        console.log(idArrays)
+        addHero(title, replace, idArrays)
+    }
+
+
 
     const buttonClick = () => {
         setE("")                  
@@ -151,8 +196,12 @@ const Custom = () => {
             setE("Error list name already exists")
             return
         }
+
+        //split list of ids if more than 1 is given 
+        const idArray = ids.split(" ")
+        console.log(idArray)
   
-        createList(ids)
+        createList(idArray[0])
         adjustList(name,"True")
     }
 
@@ -250,7 +299,62 @@ const Custom = () => {
                 )}
 
 
+                {selectAction ==='edit' && (
+                    <div className="selectedAction">
+                        <h4>Select a List</h4>
 
+                        <select className="drop" id="dropdown" value={title} onChange={selectedTitle}>
+                            <option id ="selectedText" value=""disabled selected>List Names</option>
+                            {listsNames.map(list => (
+                                <option key={list.value} value={list.value}>{list.text}</option>
+                            ))}
+                        </select>
+
+                        <h4>Input Edits</h4>
+
+                        <div className = "inputs">
+                            <form className = "input">
+                                <input value={name} className = "in" id = "user"autocomplete="off" placeholder=" Edit Name..." onChange={name => setN(name.target.value)}/>
+                            </form>
+
+                            <form className = "input">
+                                <input value={description} className = "in" id = "user"autocomplete="off" placeholder=" Edit Description (optional)..." onChange={description => setD(description.target.value)}/>
+                            </form>
+
+                            <form className = "input">
+                                <input value={ids} className = "in" id = "user"autocomplete="off" placeholder=" Edit Hero IDs..." onChange={ids => setI(ids.target.value)}/>
+                            </form>
+                        </div>
+
+                        <select className="drop" id="dropdown">
+                            <option id ="selectedText" value=""disabled selected>Visibility</option>
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
+
+                        <select className="drops" id="dropdown2">
+                            <option id ="selectedText" value=""disabled selected>Delete List</option>
+                            <option value="public">Yes</option>
+                            <option value="private">No</option>
+                        </select>
+
+                        <select class="drop" id ="dropdown3" value={replace} onChange={selectedReplace}>
+                            <option id ="selectedText" value=""disabled selected>Delete Hero ID</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="clear">Clear all</option>
+                        </select>
+
+                        <div className = "b">
+                            <button className = "button" onClick = {buttonClick1}>Edit</button>
+                        </div>
+                        <label className="error">{error}</label>
+                    </div>
+
+
+
+
+                )}
             </div>   
         </div>    
 

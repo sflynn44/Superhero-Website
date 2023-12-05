@@ -19,6 +19,22 @@
     border: 1px solid #000000;
     border-radius: 5px;
     margin-top: 10px;
+    margin-left: 10px; 
+}
+
+.drops{
+    width: 200px;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-left: 10px; 
+    background-color: #424874; 
+    color: rgb(255, 255, 255);
+}
+
+.drops option{
+    color: rgb(255, 255, 255);
 }
 
 h4{

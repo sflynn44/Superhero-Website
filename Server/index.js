@@ -374,7 +374,7 @@ router.post('/createList', (req, res) => {
   console.log(req.body)
 
   //get the name, owner, and description for the new list 
-  const newName = req.body.newName; 
+  const newName = req.body.newName.toLowerCase(); 
   const owner = req.body.owner; 
   const description = req.body.des; 
   const IDs = req.body.IDs; 
@@ -435,12 +435,13 @@ router.delete("/deleteList/:listName", (req, res) => {
 })
 
 //add hero id to the requested custom made list 
-router.put("/addHero/:listName/:ID/:replace", (req, res) =>{
+router.put("/addHero", (req, res) =>{
 
   //get the input values 
-  const listN = req.params.listName.toLowerCase(); 
-  const heroID = req.params.ID;
-  const replace = req.params.replace.toLowerCase(); 
+  const listN = req.body.title.toLowerCase(); 
+  const heroID = req.body.IDs;
+  const replace = req.body.replace.toLowerCase();
+  console.log(heroID) 
 
   //if the list does not exist then send an error message 
   if(!fs.existsSync(`Lists/${listN}.json`)){
@@ -449,27 +450,39 @@ router.put("/addHero/:listName/:ID/:replace", (req, res) =>{
 
   //get the current data of the list 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${listN}.json`))
+  console.log(currentData[4])
 
   //if specified to delete that hero id 
-  if (replace == "true"){
+  if (replace == "yes"){
     
     //get the index of the id 
-    const index = currentData[0].IDs.indexOf(heroID)
+    const index = currentData[4].IDs[0].indexOf(heroID)
 
     //remove the id from the list 
-    currentData[0].IDs.splice(index, 1)
+    currentData[4].IDs[0].splice(index, 1)
 
     //write the updated data back into the list 
     fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData))
     res.json({message: "Hero removed from list"})
 
-  }else {
-    //push the requested id into the data 
-    currentData[0].IDs.push(heroID)
+  }else if (replace == "no"){
+
+    // const IDString = heroID.toString();
+    currentData[4].IDs[0].push(...heroID);
 
     //push the data into the list and send confirmation message 
     fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData))
     res.json({message: "Hero added to list"})
+
+  } else{
+    //get the current data of the list 
+    const currentData = JSON.parse(fs.readFileSync(`Lists/${listN}.json`))
+    //get the length of the ids 
+    const length = currentData[4].IDs[0].length
+    //clear the data from the ids 
+    currentData[4].IDs[0].splice(0,length)
+    //write the cleared data back into the list 
+    fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData))
   }
 
 })
@@ -617,11 +630,6 @@ router.post('/getListInfo', (req, res) => {
   res.json(currentData)
 
 })
-
-
-
-
-
 
 router2.post('/createUser', (req, res) => {
 
