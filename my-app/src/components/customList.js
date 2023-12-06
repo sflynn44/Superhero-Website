@@ -323,10 +323,21 @@ const Custom = () => {
 
         //split list of ids if more than 1 is given 
         const idArray = ids.split(" ")
-        console.log(idArray)
+        let validity = "True"
+        idArray.forEach((id) => {
+            const numericID = parseInt(id)
+
+            if(numericID > 733){
+                setE("ID input can not be greater than 733")
+                validity = "False"
+                return
+            }
+        })
   
-        createList(idArray)
-        adjustList(name,"True")
+        if(validity == "True"){
+            createList(idArray)
+            adjustList(name,"True")
+        }   
 
         setN("")
         setD("")
