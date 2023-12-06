@@ -347,7 +347,6 @@ router.put("/addHero", (req, res) =>{
   const listN = req.body.title.toLowerCase(); 
   const heroID = req.body.IDs;
   const replace = req.body.replace.toLowerCase();
-  console.log(heroID) 
 
   //if the list does not exist then send an error message 
   if(!fs.existsSync(`Lists/${listN}.json`)){
@@ -356,16 +355,16 @@ router.put("/addHero", (req, res) =>{
 
   //get the current data of the list 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${listN}.json`))
-  console.log(currentData[4])
+  console.log(currentData[5])
 
   //if specified to delete that hero id 
   if (replace == "yes"){
     
     //get the index of the id 
-    const index = currentData[4].IDs[0].indexOf(heroID)
+    const index = currentData[5].IDs[0].indexOf(heroID)
 
     //remove the id from the list 
-    currentData[4].IDs[0].splice(index, 1)
+    currentData[5].IDs[0].splice(index, 1)
 
     //write the updated data back into the list 
     fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData))
@@ -374,7 +373,7 @@ router.put("/addHero", (req, res) =>{
   }else if (replace == "no"){
 
     // const IDString = heroID.toString();
-    currentData[4].IDs[0].push(...heroID);
+    currentData[5].IDs[0].push(...heroID);
 
     //push the data into the list and send confirmation message 
     fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData))
@@ -384,18 +383,22 @@ router.put("/addHero", (req, res) =>{
     //get the current data of the list 
     const currentData = JSON.parse(fs.readFileSync(`Lists/${listN}.json`))
     //get the length of the ids 
-    const length = currentData[4].IDs[0].length
+    const length = currentData[5].IDs[0].length
     //clear the data from the ids 
-    currentData[4].IDs[0].splice(0,length)
+    currentData[5].IDs[0].splice(0,length)
     //write the cleared data back into the list 
     fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData))
+    res.json({message: "List cleared and heroes added to list"})
   }
 
+
+  const currentDate = new Date();
+
+  currentData[4].Modification[0] = currentDate
+
+  fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData));
+
 })
-
-
-
-
 
 
 
@@ -445,6 +448,13 @@ router.put("/editLists", (req, res) =>{
 
     change = "True"
   }
+
+  const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+  const currentDate = new Date();
+
+  currentData[4].Modification[0] = currentDate
+
+  fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData));
 
   if(change === "True"){
     // Send a response to the client

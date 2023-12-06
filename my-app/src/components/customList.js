@@ -295,10 +295,24 @@ const Custom = () => {
     const buttonClick1 = () => {
         setE("")
 
-        //split list of ids if more than 1 is given 
         const idArrays = ids.split(" ")
-        console.log(idArrays)
-        addHero(title, replace, idArrays)
+        let validity = "True"
+        idArrays.forEach((id) => {
+            const numericID = parseInt(id)
+
+            if(numericID > 733){
+                setE("ID input can not be greater than 733")
+                validity = "False"
+                return
+            }
+        })
+
+        if(validity == "True"){
+            addHero(title, replace, idArrays)
+        }
+
+        setI("")
+        setRE("")
     }
 
 
