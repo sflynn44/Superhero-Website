@@ -274,7 +274,7 @@ const Custom = () => {
         const idArray = ids.split(" ")
         console.log(idArray)
   
-        createList(idArray[0])
+        createList(idArray)
         adjustList(name,"True")
     }
 

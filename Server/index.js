@@ -87,42 +87,6 @@ router.get('/', (req, res) => {
     res.json(data);
   });
 
-
-// Get all the possible publishers
-router.get('/publisher', (req, res) => {
-
-  //create the array 
-  let publishers = []
-  let heroId=0
-
-  // loop through all heroes in the data folder
-  while(true) {
-    //get the hero object based on the current id
-    const heros = data.find(hero => hero.id === heroId);
-
-    //if the ID corresponds to a hero object 
-    if (heros) {
-      //go to the next hero 
-      heroId +=1
-      //get the publisher for the current hero
-      const pub = heros.Publisher;
-      //if the publisher is not there add it to the array
-      if (!publishers.includes(pub)) {
-        publishers.push(pub);
-      }
-    }else {
-      //will end the loop once all heroes have been examined
-      break;
-    }
-  }
-  
-  //if the publisher array has contents send it if not send error code 
-  if(publishers.length > 0){
-    res.json(publishers)
-  }else{
-    res.status(404).json({ message: 'Error no publishers found' });
-  }
-}); 
   
 
 // Get a heroes powers by their ID
@@ -301,72 +265,6 @@ router2.post('/searchHeroes', (req, res) => {
 
 })
 
-  
-
-
-
-
-
-
-
-
-
-//search by the power input by the user 
-router.get('/search/getPowers/:powers/:num', (req, res) => {
-
-  const num = parseInt(req.params.num, 10)
-
-  //get the input power 
-  const pow = req.params.powers.trim();
-
-  //search the power data for opjects where that power is set to true
-  const pResults = power.filter(p => p[pow] === "True");
-
-  let finalR = []
-
-  //if the objects exist run it if not send an error code 
-  if(pResults.length > 0){
-    //find the associated hero name  
-    const hResults = pResults.map(r => r.hero_names)
-
-    //if the name is found run it if not send an error code 
-    if(hResults.length>0){
-
-        if(num === 0){
-          for(let i=0; i<hResults.length; i++){
-          //search the hero data for the information assocaited with the name
-          const heroesForPower = data.filter(hero => hero['name'] === hResults[i]);
-          //push it to the result
-          finalR.push(heroesForPower);
-          }
-        }else{
-          for(let i=0; i<hResults.length; i++){
-          //search the hero data for the information assocaited with the name
-          const heroesForPower = data.filter(hero => hero['name'] === hResults[i]);
-          //push it to the result
-          finalR.push(heroesForPower);
-          }
-        }
-    }else{
-      res.status(404).json({ message: 'Heroes names not found' });
-      return;
-    }
-  }else {
-    res.status(404).json({ message: 'Power input is not valid' });
-    return;
-  }
-  
-  //get only the requested number of results 
-  finalR = finalR.slice(0,num)
-
-  //if the hero information exists send it if not send error code 
-  if (finalR.length>0) {
-    res.json(finalR);
-  } else {
-    res.status(404).json({ message: 'Results not found' });
-  }
-})
-
 
 //create a custom list 
 router.post('/createList', (req, res) => {
@@ -400,12 +298,15 @@ router.post('/createList', (req, res) => {
     return res.status(400).json({ message: "Number of lists cannot exceed 20" });
   }
 
+  const currentDate = new Date();
+
   //new list content 
   const newList = [
     {"Owner": [owner]},
     {"View": ["private"]},
     {"Description": [description]},
     {"Reviews": []},
+    {"Modification": [currentDate]},
     {"IDs": [IDs]}
   ]
 

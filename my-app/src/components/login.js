@@ -93,7 +93,7 @@ const Login = () => {
                     <h2>Site Operations</h2>
                     <Link to='/search'>Search Heroes</Link>
                     <Link>Public Lists</Link>
-                    <Link>Custom Lists</Link>
+                    <Link to= '/customL'>Custom Lists</Link>
                     <Link to='/accountS'>Account Settings</Link>
                     <Link to='/login' className = "selected">Login</Link>
                     <h3>{userN}</h3>
