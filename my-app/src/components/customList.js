@@ -165,17 +165,90 @@ const Custom = () => {
         }
     }
 
-    const buttonClick1 = () => {
+
+
+    async function deleteList(selectTitle){
+
+        try{
+            const del = await fetch('/api/heroes/deleteList', {
         
-        console.log(title)
-        console.log(replace)
+                method: "DELETE",
+                  
+                body: JSON.stringify({title: selectTitle}),
+                  
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            if (!del.ok) {
+                const j = await del.json()
+                console.log(j.message);
+                setE(j.message)
+            } else{
+                const j = await del.json()
+                console.log(j.message)
+                setE(j.message)
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
+    const buttonClick4 = () => {
+        const b = document.querySelector('.b');
+        const text = document.querySelector('.confirmText');
+        const yesButton = document.querySelector('.yesButton');
+        const noButton = document.querySelector('.noButton');
+        b.removeChild(text)
+        b.removeChild(yesButton)
+        b.removeChild(noButton)
+    }
+
+    const buttonClick3 = () => {
+        setE("")
+
+        deleteList(title)
+        adjustList(title,"False")
+
+    }
+
+
+    const buttonClick2 = () => {
+        setE("")
+
+        const b = document.querySelector('.b');
+        const text = document.createElement("h2")
+        text.classList.add('confirmText')
+        const textText = document.createTextNode("Confirm?");
+        text.appendChild(textText)
+        b.appendChild(text)
+
+        const yesButton = document.createElement("button");
+        const buttonT = document.createTextNode("Yes");
+        yesButton.appendChild(buttonT);
+        yesButton.classList.add('powerButton', 'yesButton')
+
+        const noButton = document.createElement("button");
+        const buttonText = document.createTextNode("No");
+        noButton.appendChild(buttonText);
+        noButton.classList.add('powerButton', 'noButton')
+
+        b.appendChild(yesButton)
+        b.appendChild(noButton)
+
+        yesButton.addEventListener('click', buttonClick3);
+        noButton.addEventListener('click', buttonClick4);
+    }
+
+
+    const buttonClick1 = () => {
+        setE("")
 
         //split list of ids if more than 1 is given 
         const idArrays = ids.split(" ")
         console.log(idArrays)
         addHero(title, replace, idArrays)
     }
-
 
 
     const buttonClick = () => {
@@ -332,12 +405,6 @@ const Custom = () => {
                             <option value="private">Private</option>
                         </select>
 
-                        <select className="drops" id="dropdown2">
-                            <option id ="selectedText" value=""disabled selected>Delete List</option>
-                            <option value="public">Yes</option>
-                            <option value="private">No</option>
-                        </select>
-
                         <select class="drop" id ="dropdown3" value={replace} onChange={selectedReplace}>
                             <option id ="selectedText" value=""disabled selected>Delete Hero ID</option>
                             <option value="yes">Yes</option>
@@ -345,8 +412,13 @@ const Custom = () => {
                             <option value="clear">Clear all</option>
                         </select>
 
+                       
+
                         <div className = "b">
                             <button className = "button" onClick = {buttonClick1}>Edit</button>
+                            <br></br>
+                            <button className = "powerButton" onClick = {buttonClick2}>Delete</button>
+                            <br></br>
                         </div>
                         <label className="error">{error}</label>
                     </div>

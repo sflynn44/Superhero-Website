@@ -416,12 +416,10 @@ router.post('/createList', (req, res) => {
 
 
 //delete a custom made list 
-router.delete("/deleteList/:listName", (req, res) => {
+router.delete("/deleteList", (req, res) => {
 
   //get the requested list name 
-  const listN = req.params.listName.toLowerCase(); 
-
-  ///////can only delete the 
+  const listN = req.body.title.toLowerCase(); 
 
   //if the file does not exist send error message 
   if(!fs.existsSync(`Lists/${listN}.json`)){
@@ -486,29 +484,6 @@ router.put("/addHero", (req, res) =>{
   }
 
 })
-
-//clear all ids from the custom list 
-router.put("/clear/ids/custom/list/:listName", (req, res) =>{
-
-  //get the list values 
-  const listN = req.params.listName.toLowerCase(); 
-
-  //if the list does not exist then send an error message 
-  if(!fs.existsSync(`Lists/${listN}.json`)){
-    return res.status(400).json({message: "List does not exists"})
-  }
-
-  //get the current data of the list 
-  const currentData = JSON.parse(fs.readFileSync(`Lists/${listN}.json`))
-  //get the length of the ids 
-  const length = currentData[0].IDs.length
-  //clear the data from the ids 
-  currentData[0].IDs.splice(0,length)
-  //write the cleared data back into the list 
-  fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData))
-
-})
-
 
 //get the ids currently inside a list name 
 router.get("/getIDs/:listName", (req, res) =>{
