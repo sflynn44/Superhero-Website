@@ -386,6 +386,79 @@ router.put("/addHero", (req, res) =>{
 
 })
 
+
+
+
+
+
+
+
+
+
+router.put("/editLists", (req, res) =>{
+
+  const name = req.body.name
+  const description = req.body.des
+  const visibility = req.body.visibility
+  const title = req.body.title
+
+  let change = "False"
+
+  //if the file does not exist send error message 
+  if(!fs.existsSync(`Lists/${title}.json`)){
+    return res.status(400).json({message: "List does not exists"})
+  }
+
+  if(description !== ""){
+    //get the current data of the list 
+    const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+    console.log(currentData[2].Description[0])
+
+    currentData[2].Description[0] = description
+
+    fs.writeFileSync(`Lists/${title}.json`, JSON.stringify(currentData));
+
+    change = "True"
+  }
+
+  if(visibility !== ""){
+    //get the current data of the list 
+    const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+    console.log(currentData[1].View[0])
+
+    currentData[1].View[0] = visibility
+
+    fs.writeFileSync(`Lists/${title}.json`, JSON.stringify(currentData));
+
+    change = "True"
+  }
+
+  if(name !== ""){
+    fs.renameSync(`Lists/${title}.json`, `Lists/${name}.json`)
+
+    change = "True"
+  }
+
+  if(change === "True"){
+    // Send a response to the client
+    return res.status(200).json({message: "List updated successfully"})
+  }else{
+    return res.status(400).json({message: "No changes were made"})
+  }
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
 //get the ids currently inside a list name 
 router.get("/getIDs/:listName", (req, res) =>{
   //get the list name 
@@ -506,6 +579,8 @@ router.post('/getListInfo', (req, res) => {
   res.json(currentData)
 
 })
+
+
 
 router2.post('/createUser', (req, res) => {
 

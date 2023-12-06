@@ -1,10 +1,8 @@
 import React, {useState} from "react"
-import {useNavigate} from "react-router-dom"
 import {Link} from 'react-router-dom';
 import './customList.css';
 
 const Custom = () => {
-    const nav = useNavigate()
 
     let userN = localStorage.getItem("email")
 
@@ -12,6 +10,7 @@ const Custom = () => {
     const [name, setN] = useState("")
     const [description, setD] = useState("")
     const [ids, setI] = useState("")
+    const [visibility, setV] = useState("")
     const [error, setE] = useState("")
     const [listsNames, setDO] = useState([]);
     const [title, setT] = useState("")
@@ -36,6 +35,11 @@ const Custom = () => {
     function selectedReplace(event){
         const selectR = event.target.value;
         setRE(selectR)
+    }
+
+    function selectedVisibility(event){
+        const vis = event.target.value;
+        setV(vis)
     }
 
     async function populateList(){
@@ -194,6 +198,49 @@ const Custom = () => {
         }
     }
 
+
+
+    async function editList(selectTitle){
+
+        try{
+            const edit = await fetch('/api/heroes/editLists', {
+        
+                method: "PUT",
+                  
+                body: JSON.stringify({title: selectTitle, name: name, des: description, visibility: visibility }),
+                  
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            if (!edit.ok) {
+                const j = await edit.json()
+                console.log(j.message);
+                setE(j.message)
+            } else{
+                const j = await edit.json()
+                console.log(j.message)
+                setE(j.message)
+                
+                adjustList(name, "True")
+
+                setT("")
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
+
+
+    const buttonClick5= () => {
+        setE("")
+
+        editList(title)
+        adjustList(title, "False")
+
+    }
+
     const buttonClick4 = () => {
         const b = document.querySelector('.b');
         const text = document.querySelector('.confirmText');
@@ -211,7 +258,6 @@ const Custom = () => {
         adjustList(title,"False")
 
     }
-
 
     const buttonClick2 = () => {
         setE("")
@@ -399,7 +445,7 @@ const Custom = () => {
                             </form>
                         </div>
 
-                        <select className="drop" id="dropdown">
+                        <select className="drop" id="dropdown" value={visibility} onChange={selectedVisibility}>
                             <option id ="selectedText" value=""disabled selected>Visibility</option>
                             <option value="public">Public</option>
                             <option value="private">Private</option>
@@ -412,19 +458,15 @@ const Custom = () => {
                             <option value="clear">Clear all</option>
                         </select>
 
-                       
-
                         <div className = "b">
-                            <button className = "button" onClick = {buttonClick1}>Edit</button>
+                            <button className = "button" onClick = {buttonClick5}>Edit Info</button>
+                            <button className = "button" onClick = {buttonClick1}>Edit Heroes</button>
                             <br></br>
                             <button className = "powerButton" onClick = {buttonClick2}>Delete</button>
                             <br></br>
                         </div>
                         <label className="error">{error}</label>
                     </div>
-
-
-
 
                 )}
             </div>   
