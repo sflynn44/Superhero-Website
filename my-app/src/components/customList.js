@@ -23,6 +23,7 @@ const Custom = () => {
 
     function selected(event){
         setSA(event.target.value);
+        setT("")
         populateList(userN)
     }
 
@@ -239,6 +240,10 @@ const Custom = () => {
         editList(title)
         adjustList(title, "False")
 
+        setN("")
+        setV("")
+        setD("")
+
     }
 
     const buttonClick4 = () => {
@@ -322,6 +327,10 @@ const Custom = () => {
   
         createList(idArray)
         adjustList(name,"True")
+
+        setN("")
+        setD("")
+        setI("")
     }
 
     return (

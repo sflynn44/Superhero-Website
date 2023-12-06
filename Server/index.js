@@ -269,8 +269,6 @@ router2.post('/searchHeroes', (req, res) => {
 //create a custom list 
 router.post('/createList', (req, res) => {
 
-  console.log(req.body)
-
   //get the name, owner, and description for the new list 
   const newName = req.body.newName.toLowerCase(); 
   const owner = req.body.owner; 
@@ -289,10 +287,19 @@ router.post('/createList', (req, res) => {
   }
 
   //get the number of lists the have been created 
-  ///////////need to adjust this so that it only counts the ones with the same owner as the one creating it
+  
   const numOfLists = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'))
-  const num = numOfLists.length
 
+  // Filter files based on the owner's email address
+  const userSpecificLists = numOfLists.filter(file => {
+    const filePath = path.join('./Lists', file);
+    const fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    // Check if any object in the array has the specified owner
+    const hasMatchingOwner = fileContent.some(obj => obj.Owner && obj.Owner[0] === owner);
+    return hasMatchingOwner;  
+  });
+  const num = userSpecificLists.length
+  
   //if 20 lists have already been created send an error message 
   if(num === 20){
     return res.status(400).json({ message: "Number of lists cannot exceed 20" });
