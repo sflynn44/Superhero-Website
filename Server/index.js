@@ -500,21 +500,26 @@ router.get("/getInfo/:listName", (req, res) =>{
   //get the list name 
   const listN = req.params.listName
 
+  //if the list does not exist send error message 
+  if(!fs.existsSync(`Lists/${listN}.json`)){
+    return res.status(400).json({message: "List does not exists"})
+  }
+
   //get the current ids in the list 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${listN}.json`))
 
   //get the number of ids inside the list 
-  const length = currentData[0].IDs.length
+  const length = currentData[5].IDs[0].length
 
   //sort the heroes based on id
-  currentData[0].IDs.sort((a, b) => a.localeCompare(b));
+  currentData[5].IDs.sort((a, b) => a.localeCompare(b));
 
   const customList = []
 
   //for each id inside the list 
   for(let i=0; i<length; i++){
     //get the current id 
-    const currentID = currentData[0].IDs[i]
+    const currentID = currentData[5].IDs[0][i]
 
     //get the corresponding hero for the id 
     const heroId = parseInt(currentID);

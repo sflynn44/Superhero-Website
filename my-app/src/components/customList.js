@@ -19,12 +19,14 @@ const Custom = () => {
     const [replace, setRE] = useState("");
     const [rating, setRA] = useState("");
     const [comment, setC] = useState("");
+    const [heroInfo, setHI] = useState();
 
 
     function selected(event){
-        setSA(event.target.value);
+        const selectAction = event.target.value;
+        setSA(selectAction);
         setT("")
-        populateList()
+        populateList(selectAction)
     }
 
     function selectedTitle(event){
@@ -43,10 +45,18 @@ const Custom = () => {
         setV(vis)
     }
 
-    async function populateList(){
+    async function populateList(selectAction){
+
+        let api;
+
+        if (selectAction == "review"){
+            api = '/api/heroes/lists/public'
+        }else{
+            api = '/api/heroes/lists/j'
+        }
 
         try{
-            const populate = await fetch('/api/heroes/lists/j', {
+            const populate = await fetch(api, {
         
                 method: "POST",
                   
@@ -263,6 +273,27 @@ const Custom = () => {
     }
 
 
+    async function listInfo(selectTitle){
+        console.log("test")
+
+        try{
+            const info = await fetch(`/api/heroes/getInfo/${selectTitle}`
+            )
+            if (!info.ok) {
+                const j = await info.json()
+                console.log(j.message);
+                setE(j.message)
+            } else{
+                const j = await info.json()
+                console.log(j)
+                setHI(j)
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
+
 
     const buttonClick6= () => {
         setE("")
@@ -309,6 +340,18 @@ const Custom = () => {
         setN("")
         setV("")
         setD("")
+
+    }
+    
+    const buttonClick4= () => {
+        setHI()
+
+    }
+
+    const buttonClick3= () => {
+        setE("")
+
+        listInfo(title)
 
     }
 
@@ -501,6 +544,37 @@ const Custom = () => {
                                         <strong>{Object.keys(item)}:</strong> {JSON.stringify(Object.values(item)[0])}
                                         </li>
                                     ))}
+                                    <button className = "powerButton" onClick = {buttonClick3}>Hero Info</button>
+                                </ul>
+
+
+                                <ul className="innerL">
+                                    {heroInfo != null && heroInfo.map((hero, index) => (
+                                        <li key={index}>
+                                        {hero.name && (
+                                            <div>
+                                                <strong>ID:</strong> {hero.id} <br/>
+                                                <strong>Name:</strong> {hero.name} <br/>
+                                                <strong>Gender:</strong> {hero.Gender} <br/>
+                                                <strong>Eye color:</strong> {hero['Eye color']} <br/>
+                                                <strong>Race:</strong> {hero.Race} <br/>
+                                                <strong>Hair Colour:</strong> {hero['Hair colour']} <br/>
+                                                <strong>Height:</strong> {hero.Height} <br/>
+                                                <strong>Publisher:</strong> {hero.Publisher} <br/>
+                                                <strong>Skin Colour:</strong> {hero['Skin colour']} <br/>
+                                                <strong>Alignment:</strong> {hero.Alignment} <br/>
+                                                <strong>Weight:</strong> {hero.Weight} <br/>
+                                            </div>
+                                        )}
+                                        {hero.Abilities && (
+                                            <div>
+                                                <strong>Abilities:</strong> {JSON.stringify(hero.Abilities)} <br />
+                                            </div>
+                                        )}
+                                        <br></br>
+                                        </li>
+                                    ))}
+                                    <button className="powerButton"onClick = {buttonClick4}>Close</button>
                                 </ul>
                             </div>
                         )}
