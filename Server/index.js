@@ -813,6 +813,33 @@ router3.post('/updatePassword', (req, res) => {
 
 
 
+router.post('/addReview', (req, res) => {
+
+  const rating = req.body.rate 
+  const comment = req.body.comment
+  const title = req.body.title
+
+  //if the file does not exist send error message 
+  if(!fs.existsSync(`Lists/${title}.json`)){
+    return res.status(400).json({message: "List does not exists"})
+  }
+
+  //get the current data of the list 
+  const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+
+  let review = {Rating: rating, Comment: comment}
+
+  currentData[3].Reviews[0] = review
+
+  fs.writeFileSync(`Lists/${title}.json`, JSON.stringify(currentData));
+
+  res.json({message: "Review added to the List"})
+
+})
+
+
+
+
 //install routers
 app.use('/api/heroes', router)
 app.use('/api/users', router2)
