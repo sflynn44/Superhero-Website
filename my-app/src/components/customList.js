@@ -31,6 +31,7 @@ const Custom = () => {
 
     function selectedTitle(event){
         const selectTitle = event.target.value;
+        console.log(selectTitle)
         setT(selectTitle);
         showList(selectTitle);
     }
@@ -48,11 +49,14 @@ const Custom = () => {
     async function populateList(selectAction){
 
         let api;
+        let type; 
 
         if (selectAction == "review"){
             api = '/api/heroes/lists/public'
+            type = 1 
         }else{
             api = '/api/heroes/lists/j'
+            type = 2
         }
 
         try{
@@ -75,10 +79,19 @@ const Custom = () => {
 
                 setDO([]);
 
-                const files = j.files
-                files.forEach(item => {
-                    adjustList(item, "True")
-                });                  
+                if(type == 2){
+
+                    const files = j.files
+                    files.forEach(item => {
+                        adjustList(item, "True")
+                    });        
+                }else if(type == 1){
+        
+                    const files = j.files
+                    let names = files.map(item => item.name);
+                    console.log(names)
+                    setDO(names)        
+                }          
                 
             }
         }catch(error){
@@ -274,7 +287,6 @@ const Custom = () => {
 
 
     async function listInfo(selectTitle){
-        console.log("test")
 
         try{
             const info = await fetch(`/api/heroes/getInfo/${selectTitle}`
@@ -545,6 +557,7 @@ const Custom = () => {
                                         </li>
                                     ))}
                                     <button className = "powerButton" onClick = {buttonClick3}>Hero Info</button>
+                                    <label className="error">{error}</label>
                                 </ul>
 
 
@@ -575,6 +588,7 @@ const Custom = () => {
                                         </li>
                                     ))}
                                     <button className="powerButton"onClick = {buttonClick4}>Close</button>
+                                    <label className="error">{error}</label>
                                 </ul>
                             </div>
                         )}
@@ -643,9 +657,9 @@ const Custom = () => {
                         <h4>Select a List</h4>
 
                         <select className="drop" id="dropdown" value={title} onChange={selectedTitle}>
-                            <option id ="selectedText" value=""disabled selected>List Names</option>
-                            {listsNames.map(list => (
-                                <option key={list.value} value={list.value}>{list.text}</option>
+                            <option id="selectedText" value="" disabled selected>Select a List</option>
+                            {listsNames != null && listsNames.map((list, listN) => (
+                                <option key={listN} value={list}>{list}</option>
                             ))}
                         </select>
 

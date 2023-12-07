@@ -1,7 +1,8 @@
 //getting the required assets
 const express = require('express')
 const app = express()
-const port = 3000
+require('dotenv').config();
+let port = process.env.port
 const fs = require('fs')
 const bcrypt = require('bcrypt')
 const router = express.Router()
@@ -10,7 +11,6 @@ const router3 = express.Router()
 const bodyParser = require('body-parser');
 const path = require('path');
 const jwt = require("jsonwebtoken");
-require('dotenv').config();
 
 app.use('/', express.static('my-app'));
 
@@ -586,22 +586,34 @@ router.post('/lists/j', (req, res) => {
 //get the names of the custom lists created 
 router.post('/lists/public', (req, res) => {
 
-  //read all the files under List and then filter in the ones that end in json
-  const customListNames = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'))
-  
-  // Filter files based on the owner's email address
-  const userSpecificLists = customListNames.filter(file => {
-    const filePath = path.join('./Lists', file);
-    const fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    // Check if any object in the array has the specified owner
-    const isPublic = fileContent.some(obj => obj.View && obj.View[0] === "public");
-    return isPublic;  
-  });
-  console.log(userSpecificLists)
+  // Read all the files under List and then filter in the ones that end in json
+  const customListNames = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'));
 
-  // Get just the beginning name and replace .json with ''
-  const jsonFileNames = userSpecificLists.map(file => file.replace('.json', ''));
-  res.json({files: jsonFileNames}) 
+  // Get modification dates for each file
+  const fileDetails = customListNames.map(file => {
+      const filePath = path.join('./Lists', file);
+      const fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      const modificationDate = fs.statSync(filePath).mtime;
+      return {
+          fileName: file.replace('.json', ''),
+          modificationDate: modificationDate,
+          isPublic: fileContent.some(obj => obj.View && obj.View[0] === 'public'),
+      };
+  });
+
+  // Filter files based on the owner's email address
+  const userSpecificLists = fileDetails.filter(file => file.isPublic);
+
+  // Sort files based on modification date (newest to oldest)
+  const sortedLists = userSpecificLists.sort((a, b) => b.modificationDate - a.modificationDate);
+
+  // Get just the beginning name
+  const jsonFileNames = sortedLists.map(file => ({
+      name: file.fileName,
+      modificationDate: file.modificationDate,
+  }));
+
+  res.json({ files: jsonFileNames }); 
 
 })
 
@@ -868,6 +880,53 @@ router.post('/addReview', (req, res) => {
   fs.writeFileSync(`Lists/${title}.json`, JSON.stringify(currentData));
 
   res.json({message: "Review added to the List"})
+
+})
+
+
+
+
+router.post('/getPublicInfo', (req, res) => {
+
+  const title = req.body.title
+
+  //if the list does not exist send error message 
+  if(!fs.existsSync(`Lists/${title}.json`)){
+    return res.status(400).json({message: "List does not exists"})
+  }
+
+  //get the data from the specified list 
+  const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+
+  const requiredData = []; 
+
+  requiredData.push(title)
+
+  const email = currentData[0].Owner[0]
+
+  const users = JSON.parse(fs.readFileSync(`users.json`))  
+  const user = users.users.find(user => email === user.email)
+
+  requiredData.push(user.username)
+
+  const length = currentData[5].IDs[0].length
+
+  requiredData.push(length)
+
+
+  let ratingTotal = 0;
+
+  const reviews = currentData[3].Reviews
+
+  for (let i = 0; i < reviews.length; i++) {
+    ratingTotal += parseInt(reviews[i].Rating);
+  }
+
+  const avgRating = ratingTotal / reviews.length;
+
+  requiredData.push(avgRating)
+
+  res.json(requiredData)
 
 })
 
