@@ -7,11 +7,7 @@ import './login.css';
 const Login = () => {
     const nav = useNavigate()
 
-    let userN = localStorage.getItem("email")
-
-    if(userN == "admin123@gmail.com"){
-        userN = "Admin"
-    }
+    let userN = localStorage.getItem("username")
 
     const [email, setE] = useState("")
     const [passW, setP] = useState("")
@@ -47,9 +43,11 @@ const Login = () => {
                 console.log(j.message);
                 setLE(j.message)
 
-                console.log(j.jwtToken)
+                console.log(j)
+                console.log(j.nickName)
                 localStorage.setItem("jwtToken", j.jwtToken);
                 localStorage.setItem("email", email)
+                localStorage.setItem("username", j.nickName)
 
                 nav('/')
             }

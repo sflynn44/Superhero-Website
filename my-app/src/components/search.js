@@ -6,11 +6,7 @@ import './search.css';
 const Search = () => {
     const nav = useNavigate()
 
-    let userN = localStorage.getItem("email")
-
-    if(userN == "admin123@gmail.com"){
-        userN = "Admin"
-    }
+    let userN = localStorage.getItem("username")
 
     const [name, setN] = useState("")
     const [race, setR] = useState("")

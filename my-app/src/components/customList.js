@@ -4,7 +4,8 @@ import './customList.css';
 
 const Custom = () => {
 
-    let userN = localStorage.getItem("email")
+    let userN = localStorage.getItem("username")
+    let email = localStorage.getItem("email")
 
     const [selectAction, setSA] = useState(null);
     const [name, setN] = useState("")
@@ -16,15 +17,14 @@ const Custom = () => {
     const [title, setT] = useState("")
     const [listData, setData] = useState([]);
     const [replace, setRE] = useState("");
+    const [rating, setRA] = useState("");
+    const [comment, setC] = useState("");
 
-    if(userN == "admin123@gmail.com"){
-        userN = "Admin"
-    }
 
     function selected(event){
         setSA(event.target.value);
         setT("")
-        populateList(userN)
+        populateList()
     }
 
     function selectedTitle(event){
@@ -50,7 +50,7 @@ const Custom = () => {
         
                 method: "POST",
                   
-                body: JSON.stringify({email: userN}),
+                body: JSON.stringify({email: email}),
                   
                 headers: {
                     "Content-type": "application/json"
@@ -84,7 +84,7 @@ const Custom = () => {
         
                 method: "POST",
                   
-                body: JSON.stringify({ owner: userN, newName: name, des: description, IDs: ids }),
+                body: JSON.stringify({ owner: email, newName: name, des: description, IDs: ids }),
                   
                 headers: {
                     "Content-type": "application/json"
@@ -234,6 +234,67 @@ const Custom = () => {
 
 
 
+
+    async function addReview(selectTitle){
+
+        try{
+            const add = await fetch('/api/heroes/addReview', {
+        
+                method: "POST",
+                  
+                body: JSON.stringify({title: selectTitle, rate: rating, comment: comment, userN: userN}),
+                  
+                headers: {
+                    "Content-type": "application/json"
+                }
+            })
+            if (!add.ok) {
+                const j = await add.json()
+                console.log(j.message);
+                setE(j.message)
+            } else{
+                const j = await add.json()
+                console.log(j.message)
+                setE(j.message)
+            }
+        }catch(error){
+            console.log(`Error message: ${error}`)
+        }
+    }
+
+
+
+    const buttonClick6= () => {
+        setE("")
+
+        if (rating === "") {
+            setE("Please enter a rating")
+            return
+        }
+
+        if (comment === "") {
+            setE("Please enter a comment")
+            return
+        }
+
+        if (title === "") {
+            setE("Please enter a list name")
+            return
+        }
+
+        if(rating > 10 || rating < 0 || isNaN(rating)){
+            setE("Rating must be less than 10 and a numeric value")
+            return
+        }
+
+        addReview(title)
+
+        setRA("")
+        setC("")
+        setT("")
+    }
+
+
     const buttonClick5= () => {
         setE("")
 
@@ -267,6 +328,11 @@ const Custom = () => {
     const buttonClick2 = () => {
         setE("")
 
+        if (title === "") {
+            setE("Please enter a list name")
+            return
+        }
+
         const b = document.querySelector('.b');
         const text = document.createElement("h2")
         text.classList.add('confirmText')
@@ -294,6 +360,21 @@ const Custom = () => {
 
     const buttonClick1 = () => {
         setE("")
+
+        if (replace === "") {
+            setE("Please select a delete function")
+            return
+        }
+
+        if (ids === "") {
+            setE("Please enter ids")
+            return
+        }
+
+        if (title === "") {
+            setE("Please enter a list name")
+            return
+        }
 
         const idArrays = ids.split(" ")
         let validity = "True"
@@ -410,7 +491,7 @@ const Custom = () => {
                         </div>
                         <label className="error">{error}</label>
 
-                        <h4>CurrentLists</h4>
+                        <h4>Current Lists</h4>
 
                         <select className="drop" id="dropdown">
                             <option id ="selectedText" value=""disabled selected>List Names</option>
@@ -441,8 +522,8 @@ const Custom = () => {
 
                                 <ul className="innerL">
                                     {listData.map((item) => (
-                                        <li key={Object.keys(item)[0]}>
-                                        <strong>{Object.keys(item)[0]}:</strong> {JSON.stringify(Object.values(item)[0][0])}
+                                        <li key={Object.keys(item)}>
+                                        <strong>{Object.keys(item)}:</strong> {JSON.stringify(Object.values(item)[0])}
                                         </li>
                                     ))}
                                 </ul>
@@ -501,8 +582,45 @@ const Custom = () => {
                         </div>
                         <label className="error">{error}</label>
                     </div>
-
                 )}
+
+
+
+
+                {selectAction ==='review' && (
+                    <div className="selectedAction">
+                        <h4>Add Review to List</h4>
+
+                        <h4>Select a List</h4>
+
+                        <select className="drop" id="dropdown" value={title} onChange={selectedTitle}>
+                            <option id ="selectedText" value=""disabled selected>List Names</option>
+                            {listsNames.map(list => (
+                                <option key={list.value} value={list.value}>{list.text}</option>
+                            ))}
+                        </select>
+
+                        <div className = "inputs">
+                            <form className = "input">
+                                <input value={rating} className = "in" id = "user"autocomplete="off" placeholder=" Enter Rating (/10)..." onChange={rating => setRA(rating.target.value)}/>
+                            </form>
+
+                            <form className = "input">
+                                <input value={comment} className = "in" id = "user"autocomplete="off" placeholder=" Enter Comment..." onChange={comment => setC(comment.target.value)}/>
+                            </form>
+                        </div>
+
+                        <div className = "b">
+                            <button className = "button" onClick = {buttonClick6}>Add Review</button>
+                        </div>
+                        <label className="error">{error}</label>
+
+                    </div>
+                )}
+
+
+
+
             </div>   
         </div>    
 

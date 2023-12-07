@@ -7,11 +7,7 @@ import './grantAdmin.css';
 const Grant = () => {
     const nav = useNavigate()
 
-    let userN = localStorage.getItem("email")
-
-    if(userN == "admin123@gmail.com"){
-        userN = "Admin"
-    }
+    let userN = localStorage.getItem("username")
 
     const [email, setE] = useState("")
     const [userE, setUE] = useState("")

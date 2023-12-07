@@ -7,11 +7,7 @@ import './accountSetting.css';
 const Account = () => {
     const nav = useNavigate()
 
-    let userN = localStorage.getItem("email")
-
-    if(userN == "admin123@gmail.com"){
-        userN = "Admin"
-    }
+    let userN = localStorage.getItem("username")
 
     const buttonClick = () => {
         nav('/updateP')

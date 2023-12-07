@@ -6,11 +6,7 @@ import './updatePass.css';
 const UpdatePass = () => {
     const nav = useNavigate()
 
-    let userN = localStorage.getItem("email")
-
-    if(userN == "admin123@gmail.com"){
-        userN = "Admin"
-    }
+    let userN = localStorage.getItem("username")
 
     const [oldPass, setP] = useState("")
     const [newPass, setNP] = useState("")

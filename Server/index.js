@@ -578,6 +578,30 @@ router.post('/lists/j', (req, res) => {
 
 
 
+//get the names of the custom lists created 
+router.post('/lists/public', (req, res) => {
+
+  //read all the files under List and then filter in the ones that end in json
+  const customListNames = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'))
+  
+  // Filter files based on the owner's email address
+  const userSpecificLists = customListNames.filter(file => {
+    const filePath = path.join('./Lists', file);
+    const fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+    // Check if any object in the array has the specified owner
+    const isPublic = fileContent.some(obj => obj.View && obj.View[0] === "public");
+    return isPublic;  
+  });
+  console.log(userSpecificLists)
+
+  // Get just the beginning name and replace .json with ''
+  const jsonFileNames = userSpecificLists.map(file => file.replace('.json', ''));
+  res.json({files: jsonFileNames}) 
+
+})
+
+
+
 
 router.post('/getListInfo', (req, res) => {
 
@@ -650,6 +674,8 @@ router2.post('/confirmLogin', (req, res) => {
     return res.status(400).json({message: "No user with that email exists"})
   }
 
+  const nickName = user.username 
+
   if(user.status == "Deactivated"){
     return res.status(400).json({message: "User account is disabled. Please contact the administrator. "})
   }
@@ -670,7 +696,7 @@ router2.post('/confirmLogin', (req, res) => {
       const admin = user.admin
       let jwtData = {email, admin};
       const jwtToken = jwt.sign(jwtData, process.env.JWT_SECRET, {expiresIn: "1h",});
-      return res.status(200).json({message: "Successful login", jwtToken})
+      return res.status(200).json({message: "Successful login", jwtToken, nickName})
 
   } else {
       console.log("Password comparison failed");
@@ -818,6 +844,7 @@ router.post('/addReview', (req, res) => {
   const rating = req.body.rate 
   const comment = req.body.comment
   const title = req.body.title
+  const userN = req.body.userN
 
   //if the file does not exist send error message 
   if(!fs.existsSync(`Lists/${title}.json`)){
@@ -827,9 +854,11 @@ router.post('/addReview', (req, res) => {
   //get the current data of the list 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
 
-  let review = {Rating: rating, Comment: comment}
+  const currentDate = new Date()
 
-  currentData[3].Reviews[0] = review
+  let review = {Rating: rating, Comment: comment, User: userN, Posted: currentDate}
+
+  currentData[3].Reviews.push(review)
 
   fs.writeFileSync(`Lists/${title}.json`, JSON.stringify(currentData));
 

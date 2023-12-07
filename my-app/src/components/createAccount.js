@@ -6,11 +6,7 @@ import './createAccount.css';
 const CreateAccount = () => {
     const nav = useNavigate()
 
-    let userName = localStorage.getItem("email")
-
-    if(userName == "admin123@gmail.com"){
-        userName = "Admin"
-    }
+    let userName = localStorage.getItem("username")
 
     const [userN, setUN] = useState("")
     const [emailA, setEA] = useState("")
