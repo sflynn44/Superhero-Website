@@ -287,11 +287,16 @@ const Custom = () => {
             return
         }
 
-        addReview(title)
+        const userConfirmed = window.confirm("Please confirm you would like to add this review?");
 
-        setRA("")
-        setC("")
-        setT("")
+        if (userConfirmed) {
+            addReview(title);
+            setRA("");
+            setC("");
+            setT("");
+        } else {
+            setE("Review addition canceled");
+  }
     }
 
 
@@ -307,24 +312,6 @@ const Custom = () => {
 
     }
 
-    const buttonClick4 = () => {
-        const b = document.querySelector('.b');
-        const text = document.querySelector('.confirmText');
-        const yesButton = document.querySelector('.yesButton');
-        const noButton = document.querySelector('.noButton');
-        b.removeChild(text)
-        b.removeChild(yesButton)
-        b.removeChild(noButton)
-    }
-
-    const buttonClick3 = () => {
-        setE("")
-
-        deleteList(title)
-        adjustList(title,"False")
-
-    }
-
     const buttonClick2 = () => {
         setE("")
 
@@ -333,28 +320,16 @@ const Custom = () => {
             return
         }
 
-        const b = document.querySelector('.b');
-        const text = document.createElement("h2")
-        text.classList.add('confirmText')
-        const textText = document.createTextNode("Confirm?");
-        text.appendChild(textText)
-        b.appendChild(text)
+        const userConfirmed = window.confirm("Please confirm you would like to add this review?");
 
-        const yesButton = document.createElement("button");
-        const buttonT = document.createTextNode("Yes");
-        yesButton.appendChild(buttonT);
-        yesButton.classList.add('powerButton', 'yesButton')
+        if (userConfirmed) {
+            setE("")
 
-        const noButton = document.createElement("button");
-        const buttonText = document.createTextNode("No");
-        noButton.appendChild(buttonText);
-        noButton.classList.add('powerButton', 'noButton')
-
-        b.appendChild(yesButton)
-        b.appendChild(noButton)
-
-        yesButton.addEventListener('click', buttonClick3);
-        noButton.addEventListener('click', buttonClick4);
+            deleteList(title)
+            adjustList(title,"False")
+        }else{
+            setE("Deletion of list cancelled")
+        }
     }
 
 
