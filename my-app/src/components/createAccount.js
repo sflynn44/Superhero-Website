@@ -83,10 +83,10 @@ const CreateAccount = () => {
             <div className ="sidebar">
                 <h2>Site Operations</h2>
                 <Link to='/search'>Search Heroes</Link>
-                <Link>Public Lists</Link>
+                <Link to='/publicL'>Public Lists</Link>
                 <Link to= '/customL'>Custom Lists</Link>
                 <Link to='/accountS'>Account Settings</Link>
-                <Link to='/login'>Login</Link>
+                <Link to='/login' className = "selected">Login</Link>
                 <h3>{userName}</h3>
             </div>
 

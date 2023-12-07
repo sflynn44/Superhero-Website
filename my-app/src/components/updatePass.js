@@ -86,8 +86,8 @@ const UpdatePass = () => {
 
             <div className ="sidebar">
                 <h2>Site Operations</h2>
-                <Link>Search Heroes</Link>
-                <Link>Public Lists</Link>
+                <Link to='/search'>Search Heroes</Link>
+                <Link to='/publicL'>Public Lists</Link>
                 <Link to= '/customL'>Custom Lists</Link>
                 <Link to='/accountS' className = "selected">Account Settings</Link>
                 <Link to='/login'>Login</Link>

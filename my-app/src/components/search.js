@@ -209,7 +209,7 @@ const Search = () => {
             <div className ="sidebar">
                 <h2>Site Operations</h2>
                 <Link to='/search' className = "selected">Search Heroes</Link>
-                <Link>Public Lists</Link>
+                <Link to='/publicL'>Public Lists</Link>
                 <Link to= '/customL'>Custom Lists</Link>
                 <Link to='/accountS'>Account Settings</Link>
                 <Link to='/login'>Login</Link>
