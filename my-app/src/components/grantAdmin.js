@@ -57,17 +57,19 @@ const Grant = () => {
     async function deactivating(email, type){
 
         let admin = localStorage.getItem("email")
+        let token = localStorage.getItem("jwtToken");
         console.log(admin)
 
         try{
-            const grant = await fetch('/api/users/deactivate', {
+            const grant = await fetch('/api/auth/deactivate', {
         
                 method: "POST",
                   
                 body: JSON.stringify({email: email, adminN: admin, type: type}),
                   
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 }
             })
             //if error response print it

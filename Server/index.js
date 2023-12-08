@@ -326,7 +326,7 @@ router3.post('/createList', (req, res) => {
 
 
 //delete a custom made list 
-router.delete("/deleteList", (req, res) => {
+router3.delete("/deleteList", (req, res) => {
 
   //get the requested list name 
   const listN = req.body.title.toLowerCase(); 
@@ -365,7 +365,8 @@ router3.put("/addHero", (req, res) =>{
   if (replace == "yes"){
     
     //get the index of the id 
-    const index = currentData[5].IDs[0].indexOf(heroID)
+    const index = currentData[5].IDs[0].indexOf(heroID.toString())
+    console.log(index)
 
     //remove the id from the list 
     currentData[5].IDs[0].splice(index, 1)
@@ -634,7 +635,7 @@ router.post('/lists/public', (req, res) => {
 
 
 //this will get all the information for a list 
-router.post('/getListInfo', (req, res) => {
+router3.post('/getListInfo', (req, res) => {
 
   //get the title 
   const title = req.body.title
@@ -720,9 +721,11 @@ router2.post('/confirmLogin', (req, res) => {
   //get the username for the user 
   const nickName = user.username 
 
+  console.log(user.status)
   //if the account has been deactivated inform the user 
   if(user.status == "Deactivated"){
-    return res.status(400).json({message: "User account is disabled. Please contact the administrator. "})
+    console.log("test")
+    return res.status(400).json({message: "User account is disabled. Please contact the administrator at admin123@gmail.com. "})
   }
 
   //if the account is unverified inform the user 
@@ -775,7 +778,7 @@ router2.post('/emailConfirmation/:email', (req, res) => {
   }
 
   //change the verification in the users account to verified 
-  users.users[user].verification = "Verified"
+  user.verification = "Verified";
 
   //write in these new changes 
   fs.writeFileSync(`users.json`, JSON.stringify(users))
@@ -849,7 +852,7 @@ router3.post('/deactivate', (req, res) => {
 
   //adjust the status of the user based on the desired action by the admin
   if(type == "deactiveate"){
-    users.users[changedUser].status = "Deactiveated"
+    users.users[changedUser].status = "Deactivated"
   } else if(type == "active"){
     users.users[changedUser].status = "Active"
   }
@@ -871,7 +874,6 @@ router3.post('/updatePassword', (req, res) => {
   const newPass = req.body.newPass
   const confirmPass = req.body.confirmPass
   const email = req.body.email 
-  console.log(req.body)
 
   //get the users and find the index of the user we want to change 
   const users = JSON.parse(fs.readFileSync(`users.json`))  

@@ -4,28 +4,25 @@ import {Link} from 'react-router-dom';
 import './policies.css';
 
 const Policies = () => {
-    const nav = useNavigate()
 
-    // State to track whether files are accessible or not
+    //create the variables 
     const [Sfiles, setSFiles] = useState(true);
     const [Afiles, setAFiles] = useState(true);
 
     //get username to display
     let userN = localStorage.getItem("username")
 
+    //if clicked display the security policy
     function buttonClick(fileUrl) {
         if (Sfiles) {
             window.open(fileUrl, "_blank");
-        } else {
-            alert("Files are not accessible. Site manager needs to enable access.");
         }
     }
 
+    //if clicked display the aup 
     function buttonClick1(fileUrl){
         if (Afiles) {
             window.open(fileUrl, "_blank");
-        } else {
-            alert("Files are not accessible. Site manager needs to enable access.");
         }
     }
 

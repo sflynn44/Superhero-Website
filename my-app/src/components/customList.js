@@ -143,8 +143,6 @@ const Custom = () => {
                 const j = await create.json()
                 console.log(j.message);
                 setE(j.message)
-
-                adjustList(name,"True")
             }
         //send error is error with fetch 
         }catch(error){
@@ -417,8 +415,8 @@ const Custom = () => {
         setD(removeTags(description))
 
         //edit list and adjust the lists 
-        editList(title)
         adjustList(title, "False")
+        editList(title)
 
         setN("")
         setV("")
@@ -551,6 +549,7 @@ const Custom = () => {
         if(validity == "True"){
             //create the list and adjust the list names 
             createList(idArray)
+            adjustList(name,"True")
         }   
 
         setN("")
