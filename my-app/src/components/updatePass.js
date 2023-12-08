@@ -2,11 +2,13 @@ import React, {useState} from "react"
 import {useNavigate} from "react-router-dom"
 import {Link} from 'react-router-dom';
 import './updatePass.css';
+import { removeTags } from './sanitization';
 
 const UpdatePass = () => {
     const nav = useNavigate()
 
     let userN = localStorage.getItem("username")
+    let email = localStorage.getItem("email")
 
     const [oldPass, setP] = useState("")
     const [newPass, setNP] = useState("")
@@ -25,7 +27,7 @@ const UpdatePass = () => {
         
                 method: "POST",
                   
-                body: JSON.stringify({email: userN, oldPass: oldPass, newPass: newPass, confirmPass: confirmPass}),
+                body: JSON.stringify({email: email, oldPass: oldPass, newPass: newPass, confirmPass: confirmPass}),
                   
                 headers: {
                     "Content-type": "application/json",
@@ -75,6 +77,10 @@ const UpdatePass = () => {
             setPE3("Please enter the same password")
             return
         }
+
+        setP(removeTags(oldPass))
+        setNP(removeTags(newPass))
+        setCP(removeTags(confirmPass))
 
         updating(userN, oldPass, newPass, confirmPass)
             

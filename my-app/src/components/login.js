@@ -2,6 +2,7 @@ import React, {useState} from "react"
 import {useNavigate} from "react-router-dom"
 import {Link} from 'react-router-dom';
 import './login.css';
+import { removeTags } from './sanitization';
 
 
 const Login = () => {
@@ -66,6 +67,8 @@ const Login = () => {
         setPE("")
         setLE("")
 
+
+
         if (email === "") {
             setUE("Please enter your email address")
             return
@@ -79,6 +82,9 @@ const Login = () => {
         if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)){
             setUE("Please enter a valid email")
         }
+
+        setE(removeTags(email))
+        setP(removeTags(passW))
 
         loginAccount(email, passW)
 

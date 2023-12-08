@@ -2,6 +2,7 @@ import React, {useState} from "react"
 import {useNavigate} from "react-router-dom"
 import {Link} from 'react-router-dom';
 import './grantAdmin.css';
+import { removeTags } from './sanitization';
 
 
 const Grant = () => {
@@ -82,7 +83,7 @@ const Grant = () => {
         setUE("")
 
         if (email === "") {
-            setUE("Please enter your email address")
+            setUE("Please enter an email address")
             return
         }
 
@@ -90,6 +91,8 @@ const Grant = () => {
             setUE("Please enter a valid email")
             return
         }
+
+        setE(removeTags(email))
 
         let selectedType = document.getElementById("dropdown").value
 

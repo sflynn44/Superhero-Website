@@ -2,6 +2,7 @@ import React, {useState}from "react"
 import {useNavigate} from "react-router-dom"
 import {Link} from 'react-router-dom';
 import './createAccount.css';
+import { removeTags } from './sanitization';
 
 const CreateAccount = () => {
     const nav = useNavigate()
@@ -70,6 +71,10 @@ const CreateAccount = () => {
         if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailA)){
             setE2("Please enter a valid email")
         }
+
+        setUN(removeTags(userN))
+        setP(removeTags(passW))
+        setEA(removeTags(emailA))
 
         
         createA(userN, emailA, passW)

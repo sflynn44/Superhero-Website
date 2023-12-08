@@ -198,7 +198,7 @@ const Search = () => {
     }
 
     const buttonClick = () => {
-        setE("")                  
+        setE("")
 
         searching(name, race, pub, power)
     }

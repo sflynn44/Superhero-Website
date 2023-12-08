@@ -1,6 +1,7 @@
 import React, {useState} from "react"
 import {Link} from 'react-router-dom';
 import './customList.css';
+import { removeTags } from './sanitization';
 
 const Custom = () => {
 
@@ -330,6 +331,9 @@ const Custom = () => {
             return
         }
 
+        setRA(removeTags(rating))
+        setC(removeTags(comment))
+
         const userConfirmed = window.confirm("Please confirm you would like to add this review?");
 
         if (userConfirmed) {
@@ -345,6 +349,9 @@ const Custom = () => {
 
     const buttonClick5= () => {
         setE("")
+
+        setN(removeTags(name))
+        setD(removeTags(description))
 
         editList(title)
         adjustList(title, "False")
@@ -371,7 +378,7 @@ const Custom = () => {
         setE("")
 
         if (title === "") {
-            setE("Please enter a list name")
+            setE("Please select a list name")
             return
         }
 
@@ -406,6 +413,10 @@ const Custom = () => {
             return
         }
 
+        setI(removeTags(ids))
+        setN(removeTags(name))
+        setD(removeTags(description))
+
         const idArrays = ids.split(" ")
         let validity = "True"
         idArrays.forEach((id) => {
@@ -439,6 +450,9 @@ const Custom = () => {
             setE("Please enter hero IDs.")
             return
         }
+
+        setI(removeTags(ids))
+        setN(removeTags(name))
 
         const listNamesCheck = listsNames.some(item => item.text === name)
         if(listNamesCheck){
