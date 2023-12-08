@@ -17,7 +17,6 @@ app.use('/', express.static('my-app'));
 const verify = (req, res, next) => {
 
   let token = req.headers.authorization 
-  console.log(token)
   
   if (!token) {
     return res.status(401).json({ message: 'Authorization header is missing' });
@@ -258,7 +257,7 @@ router2.post('/searchHeroes', (req, res) => {
 
 
 //create a custom list 
-router.post('/createList', (req, res) => {
+router3.post('/createList', (req, res) => {
 
   //get the name, owner, and description for the new list 
   const newName = req.body.newName.toLowerCase(); 
@@ -334,7 +333,7 @@ router.delete("/deleteList", (req, res) => {
 
 
 //add hero id to the requested custom made list 
-router.put("/addHero", (req, res) =>{
+router3.put("/addHero", (req, res) =>{
 
   //get the input values 
   const listN = req.body.title.toLowerCase(); 
@@ -398,13 +397,15 @@ router.put("/addHero", (req, res) =>{
 
 
 //this will allow the user to edit their lists 
-router.put("/editLists", (req, res) =>{
+router3.put("/editLists", (req, res) =>{
 
   //get the required values 
   const name = req.body.name
   const description = req.body.des
   const visibility = req.body.visibility
   const title = req.body.title
+
+  let oldtitle = title
 
   let change = "False"
 
@@ -448,12 +449,14 @@ router.put("/editLists", (req, res) =>{
     //rewrite the name of the file 
     fs.renameSync(`Lists/${title}.json`, `Lists/${name}.json`)
 
+    oldtitle = name
+
     //change to true 
     change = "True"
   }
 
   //get the current data 
-  const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+  const currentData = JSON.parse(fs.readFileSync(`Lists/${oldtitle}.json`))
 
   //get the current date of the edit 
   const currentDate = new Date();
@@ -462,7 +465,7 @@ router.put("/editLists", (req, res) =>{
   currentData[4].Modification[0] = currentDate
 
   //write the changes into the files 
-  fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData));
+  fs.writeFileSync(`Lists/${oldtitle}.json`, JSON.stringify(currentData));
 
   if(change === "True"){
     //send a response to the user is successful
@@ -623,6 +626,7 @@ router.post('/getListInfo', (req, res) => {
 
   //get the title 
   const title = req.body.title
+  console.log(title)
 
   //if the list does not exist send error message 
   if(!fs.existsSync(`Lists/${title}.json`)){
@@ -631,6 +635,7 @@ router.post('/getListInfo', (req, res) => {
 
   //get the data from the specified list 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+  console.log(currentData)
 
   //send the data 
   res.json(currentData)
@@ -903,7 +908,7 @@ router3.post('/updatePassword', (req, res) => {
 })
 
 //this will let the user add a review to a list 
-router.post('/addReview', (req, res) => {
+router3.post('/addReview', (req, res) => {
 
   //get required values 
   const rating = req.body.rate 

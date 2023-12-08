@@ -96,7 +96,10 @@ const Public = () => {
             } else{
                 const j = await info.json()
                 console.log(j)
-                setData(j)
+                let temp = []
+                temp.push(j[2])
+                temp.push(j[5])
+                setData(temp)
 
             }
         //if error with fetch print it 

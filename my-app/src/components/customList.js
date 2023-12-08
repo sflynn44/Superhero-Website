@@ -8,6 +8,7 @@ const Custom = () => {
     //get the username and email to display and use 
     let userN = localStorage.getItem("username")
     let email = localStorage.getItem("email")
+    let token = localStorage.getItem("jwtToken");
 
     //create the required variables 
     const [selectAction, setSA] = useState(null);
@@ -121,14 +122,15 @@ const Custom = () => {
 
         try{
             //fetch the function to create a list 
-            const create = await fetch('/api/heroes/createList', {
+            const create = await fetch('/api/auth/createList', {
         
                 method: "POST",
                   
                 body: JSON.stringify({ owner: email, newName: name, des: description, IDs: ids }),
                   
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 }
             })
             //if error returned print it 
@@ -141,6 +143,8 @@ const Custom = () => {
                 const j = await create.json()
                 console.log(j.message);
                 setE(j.message)
+
+                adjustList(name,"True")
             }
         //send error is error with fetch 
         }catch(error){
@@ -164,14 +168,15 @@ const Custom = () => {
 
         try{
             //fetch the list information 
-            const info = await fetch('/api/heroes/getListInfo', {
+            const info = await fetch('/api/auth/getListInfo', {
         
                 method: "POST",
                   
                 body: JSON.stringify({title: selectTitle}),
                   
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 }
             })
             //if error returned print it 
@@ -199,14 +204,15 @@ const Custom = () => {
 
         try{
             //fetch to alter heroes in the list 
-            const add = await fetch('/api/heroes/addHero', {
+            const add = await fetch('/api/auth/addHero', {
         
                 method: "PUT",
                   
                 body: JSON.stringify({title: selectTitle, IDs: idArrays, replace: replacing}),
                   
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 }
             })
             //if error returned print it 
@@ -232,14 +238,15 @@ const Custom = () => {
 
         try{
             //fetch to delete list 
-            const del = await fetch('/api/heroes/deleteList', {
+            const del = await fetch('/api/auth/deleteList', {
         
                 method: "DELETE",
                   
                 body: JSON.stringify({title: selectTitle}),
                   
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 }
             })
             //if error returned print it 
@@ -265,14 +272,15 @@ const Custom = () => {
 
         try{
             //fetch to edit list 
-            const edit = await fetch('/api/heroes/editLists', {
+            const edit = await fetch('/api/auth/editLists', {
         
                 method: "PUT",
                   
                 body: JSON.stringify({title: selectTitle, name: name, des: description, visibility: visibility }),
                   
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    'Authorization': `auth ${token}`
                 }
             })
             //if error returned print it 
@@ -302,14 +310,15 @@ const Custom = () => {
 
         try{
             //fetch to add review 
-            const add = await fetch('/api/heroes/addReview', {
+            const add = await fetch('/api/auth/addReview', {
         
                 method: "POST",
                   
                 body: JSON.stringify({title: selectTitle, rate: rating, comment: comment, userN: userN}),
                   
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 }
             })
             //if error returned print it 
@@ -542,7 +551,6 @@ const Custom = () => {
         if(validity == "True"){
             //create the list and adjust the list names 
             createList(idArray)
-            adjustList(name,"True")
         }   
 
         setN("")
