@@ -166,15 +166,14 @@ const Custom = () => {
 
         try{
             //fetch the list information 
-            const info = await fetch('/api/auth/getListInfo', {
+            const info = await fetch('/api/heroes/getListInfo', {
         
                 method: "POST",
                   
                 body: JSON.stringify({title: selectTitle}),
                   
                 headers: {
-                    "Content-type": "application/json",
-                    'Authorization': `Bearer ${token}`
+                    "Content-type": "application/json"
                 }
             })
             //if error returned print it 

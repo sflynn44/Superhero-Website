@@ -26,7 +26,8 @@ const Home = () => {
 
             <div className = "content">
                 <h1>Welcome to SE3316 Superheroes</h1>
-                <p>Little blurb about the site</p>
+                <p>If you have an interest in superheroes this site is for you.</p>
+                <p>Here you can explore, save, and view superhero content</p>
             </div>
 
 

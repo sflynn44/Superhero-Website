@@ -635,7 +635,7 @@ router.post('/lists/public', (req, res) => {
 
 
 //this will get all the information for a list 
-router3.post('/getListInfo', (req, res) => {
+router.post('/getListInfo', (req, res) => {
 
   //get the title 
   const title = req.body.title
