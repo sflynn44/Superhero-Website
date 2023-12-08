@@ -5,9 +5,11 @@ import { removeTags } from './sanitization';
 
 const Custom = () => {
 
+    //get the username and email to display and use 
     let userN = localStorage.getItem("username")
     let email = localStorage.getItem("email")
 
+    //create the required variables 
     const [selectAction, setSA] = useState(null);
     const [name, setN] = useState("")
     const [description, setD] = useState("")
@@ -23,35 +25,43 @@ const Custom = () => {
     const [heroInfo, setHI] = useState();
 
 
+    //setting the event for the main dropdown menu 
     function selected(event){
         const selectAction = event.target.value;
         setSA(selectAction);
         setT("")
+        //populate the list for each action 
         populateList(selectAction)
     }
 
+    //set the title when selected from drop down menu 
     function selectedTitle(event){
         const selectTitle = event.target.value;
         console.log(selectTitle)
         setT(selectTitle);
+        //show the list information for the selected title 
         showList(selectTitle);
     }
 
+    //set the replace selected value 
     function selectedReplace(event){
         const selectR = event.target.value;
         setRE(selectR)
     }
 
+    //set the visibility selected value 
     function selectedVisibility(event){
         const vis = event.target.value;
         setV(vis)
     }
 
+    //function to populate the lists of titles 
     async function populateList(selectAction){
 
         let api;
         let type; 
 
+        //determine if public lists or user lists are needed 
         if (selectAction == "review"){
             api = '/api/heroes/lists/public'
             type = 1 
@@ -61,6 +71,7 @@ const Custom = () => {
         }
 
         try{
+            //call the fetch for the needed api
             const populate = await fetch(api, {
         
                 method: "POST",
@@ -71,10 +82,12 @@ const Custom = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if an error is returned print it 
             if (!populate.ok) {
                 const j = await populate.json()
                 console.log(j.message);
                 setE(j.message)
+
             } else{
                 const j = await populate.json()
 
@@ -82,28 +95,32 @@ const Custom = () => {
 
                 if(type == 2){
 
+                    //setting files names on list dropdown for user lists 
                     const files = j.files
                     files.forEach(item => {
                         adjustList(item, "True")
-                    });        
+                    });    
+
                 }else if(type == 1){
-        
+                    //setting file names on list dropdown for public 
                     const files = j.files
                     let names = files.map(item => item.name);
-                    console.log(names)
                     setDO(names)        
                 }          
                 
             }
+        //send error is error with fetch 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
+    //function to create a new list 
     async function createList(ids){
 
         try{
+            //fetch the function to create a list 
             const create = await fetch('/api/heroes/createList', {
         
                 method: "POST",
@@ -114,21 +131,26 @@ const Custom = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!create.ok) {
                 const j = await create.json()
                 console.log(j.message);
                 setE(j.message)
+            //if success print success message 
             } else{
                 const j = await create.json()
                 console.log(j.message);
                 setE(j.message)
             }
+        //send error is error with fetch 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
+    //function to adjust the list when a change is made 
     function adjustList(title, operation){
+        //true to add list or false to remove list 
         if (operation === 'True') {
             setDO(lists => [...lists, { text: title, value: title }]);
         }else if(operation === 'False'){
@@ -137,9 +159,11 @@ const Custom = () => {
     }
 
 
+    //function to get the list information 
     async function showList(selectTitle){
 
         try{
+            //fetch the list information 
             const info = await fetch('/api/heroes/getListInfo', {
         
                 method: "POST",
@@ -150,10 +174,12 @@ const Custom = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!info.ok) {
                 const j = await info.json()
                 console.log(j.message);
                 setE(j.message)
+            //if successful set the data to the retieved info
             } else{
                 const j = await info.json()
                 console.log(j)
@@ -161,15 +187,18 @@ const Custom = () => {
                 setData(j)
 
             }
+        //send error is error with fetch 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
+    //function to alter the hero list 
     async function addHero(selectTitle, replacing, idArrays){
 
         try{
+            //fetch to alter heroes in the list 
             const add = await fetch('/api/heroes/addHero', {
         
                 method: "PUT",
@@ -180,25 +209,29 @@ const Custom = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!add.ok) {
                 const j = await add.json()
                 console.log(j.message);
                 setE(j.message)
+            //else if successful print it 
             } else{
                 const j = await add.json()
                 console.log(j.message)
                 setE(j.message)
             }
+        //send error is error with fetch 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
-
+    //function to delete list 
     async function deleteList(selectTitle){
 
         try{
+            //fetch to delete list 
             const del = await fetch('/api/heroes/deleteList', {
         
                 method: "DELETE",
@@ -209,25 +242,29 @@ const Custom = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!del.ok) {
                 const j = await del.json()
                 console.log(j.message);
                 setE(j.message)
+            //else if successful print it 
             } else{
                 const j = await del.json()
                 console.log(j.message)
                 setE(j.message)
             }
+            //send error is error with fetch 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
-
+    //function to edit list
     async function editList(selectTitle){
 
         try{
+            //fetch to edit list 
             const edit = await fetch('/api/heroes/editLists', {
         
                 method: "PUT",
@@ -238,10 +275,12 @@ const Custom = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!edit.ok) {
                 const j = await edit.json()
                 console.log(j.message);
                 setE(j.message)
+            //else if successful print it and adjust the list accordingly 
             } else{
                 const j = await edit.json()
                 console.log(j.message)
@@ -251,17 +290,18 @@ const Custom = () => {
 
                 setT("")
             }
+        //send error is error with fetch 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
-
-
+    //function to add review to list 
     async function addReview(selectTitle){
 
         try{
+            //fetch to add review 
             const add = await fetch('/api/heroes/addReview', {
         
                 method: "POST",
@@ -272,35 +312,43 @@ const Custom = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!add.ok) {
                 const j = await add.json()
                 console.log(j.message);
                 setE(j.message)
+            //else if successful print it 
             } else{
                 const j = await add.json()
                 console.log(j.message)
                 setE(j.message)
             }
+        //send error is error with fetch 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
+    //function to get hero information for a list 
     async function listInfo(selectTitle){
 
         try{
+            //fetch to get information for heroes in list 
             const info = await fetch(`/api/heroes/getInfo/${selectTitle}`
             )
+            //if error returned print it 
             if (!info.ok) {
                 const j = await info.json()
                 console.log(j.message);
                 setE(j.message)
+            //else if successful set information 
             } else{
                 const j = await info.json()
                 console.log(j)
                 setHI(j)
             }
+        //send error is error with fetch 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
@@ -311,6 +359,7 @@ const Custom = () => {
     const buttonClick6= () => {
         setE("")
 
+        //ensure all fields are filled in and list selected 
         if (rating === "") {
             setE("Please enter a rating")
             return
@@ -326,17 +375,21 @@ const Custom = () => {
             return
         }
 
+        //ensure the ratings are in the correct range 
         if(rating > 10 || rating < 0 || isNaN(rating)){
             setE("Rating must be less than 10 and a numeric value")
             return
         }
 
+        //sanitization of input 
         setRA(removeTags(rating))
         setC(removeTags(comment))
 
+        //confirm the addition
         const userConfirmed = window.confirm("Please confirm you would like to add this review?");
 
         if (userConfirmed) {
+            //if yes add review and reset values 
             addReview(title);
             setRA("");
             setC("");
@@ -350,9 +403,11 @@ const Custom = () => {
     const buttonClick5= () => {
         setE("")
 
+        //sanitization of input 
         setN(removeTags(name))
         setD(removeTags(description))
 
+        //edit list and adjust the lists 
         editList(title)
         adjustList(title, "False")
 
@@ -362,29 +417,33 @@ const Custom = () => {
 
     }
     
+    //reset hero information 
     const buttonClick4= () => {
         setHI()
-
     }
 
+    //get hero information for a list title 
     const buttonClick3= () => {
         setE("")
 
         listInfo(title)
-
     }
+
 
     const buttonClick2 = () => {
         setE("")
 
+        //ensure title has been selected 
         if (title === "") {
             setE("Please select a list name")
             return
         }
 
+        //confirm the deletion
         const userConfirmed = window.confirm("Please confirm you would like to add this review?");
 
         if (userConfirmed) {
+            //if yes delete list and adjust lists accordingly 
             setE("")
 
             deleteList(title)
@@ -398,6 +457,7 @@ const Custom = () => {
     const buttonClick1 = () => {
         setE("")
 
+        //ensure all fields are filled in or selected 
         if (replace === "") {
             setE("Please select a delete function")
             return
@@ -413,13 +473,14 @@ const Custom = () => {
             return
         }
 
+        //sanitization 
         setI(removeTags(ids))
-        setN(removeTags(name))
-        setD(removeTags(description))
 
+        //split the ids by space 
         const idArrays = ids.split(" ")
         let validity = "True"
         idArrays.forEach((id) => {
+            //ensure no invalid ids are present 
             const numericID = parseInt(id)
 
             if(numericID > 733){
@@ -430,6 +491,7 @@ const Custom = () => {
         })
 
         if(validity == "True"){
+            //adjust the heroes in the list 
             addHero(title, replace, idArrays)
         }
 
@@ -441,6 +503,7 @@ const Custom = () => {
     const buttonClick = () => {
         setE("")                  
 
+        //ensure the fields are filled in 
         if (name === "") {
             setE("Please enter a list name")
             return
@@ -451,19 +514,22 @@ const Custom = () => {
             return
         }
 
+        //sanitization 
         setI(removeTags(ids))
         setN(removeTags(name))
 
+        //ensure no list already exists 
         const listNamesCheck = listsNames.some(item => item.text === name)
         if(listNamesCheck){
             setE("Error list name already exists")
             return
         }
 
-        //split list of ids if more than 1 is given 
+        //split list of ids by space  
         const idArray = ids.split(" ")
         let validity = "True"
         idArray.forEach((id) => {
+            //ensure no invalid ids are present 
             const numericID = parseInt(id)
 
             if(numericID > 733){
@@ -474,6 +540,7 @@ const Custom = () => {
         })
   
         if(validity == "True"){
+            //create the list and adjust the list names 
             createList(idArray)
             adjustList(name,"True")
         }   

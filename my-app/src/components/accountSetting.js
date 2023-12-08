@@ -7,16 +7,20 @@ import './accountSetting.css';
 const Account = () => {
     const nav = useNavigate()
 
+    //get the username to display
     let userN = localStorage.getItem("username")
 
+    //go to the update password page 
     const buttonClick = () => {
         nav('/updateP')
     }
 
+    //go to the grant admin page 
     const buttonClick1 = () => {
         nav('/grantA')
     }
 
+    //log out function 
     const buttonClick2 = () => {
 
         localStorage.clear()

@@ -6,14 +6,17 @@ import './search.css';
 const Search = () => {
     const nav = useNavigate()
 
+    //get username to display
     let userN = localStorage.getItem("username")
 
+    //create values 
     const [name, setN] = useState("")
     const [race, setR] = useState("")
     const [pub, setP] = useState("")
     const [power, setPO] = useState("")
     const [error, setE] = useState("")
 
+    //display to search data in format 
     function displayResults(data){
 
         const d = document.getElementById("results")
@@ -35,16 +38,19 @@ const Search = () => {
             innerList.appendChild(item)
             }
           }
+          //powers button
           const powerButton = document.createElement("button");
           const buttonText = document.createTextNode("Powers");
           powerButton.appendChild(buttonText);
           powerButton.classList.add('powerButton')
 
+          //info button
           const infoButton = document.createElement("button");
           const buttonTexts = document.createTextNode("Info");
           infoButton.appendChild(buttonTexts);
           infoButton.classList.add('powerButton')
 
+          //DDG search button
           const searchButton = document.createElement("button");
           const buttonsTexts = document.createTextNode("Search DDG");
           searchButton.appendChild(buttonsTexts);
@@ -55,13 +61,16 @@ const Search = () => {
             const heroName = e["name"];
                
                 try{
+                    //fetch the hero information by name 
                     const s = await fetch(`/api/heroes/${heroName}`)
         
+                    //if error print it 
                     if (!s.ok) {
                         const j = await s.json()
                         console.log(j.message);
                         setE(j.message)                  
         
+                    //if successful print data correctly 
                     } else{
                         const j = await s.json()
                         console.log(j)
@@ -72,6 +81,7 @@ const Search = () => {
                                 const items = document.createElement('li')
                                 items.appendChild(document.createTextNode(obj[key].join(', ')))
 
+                                //close button
                                 const closeButton = document.createElement("button");
                                 const buttonText = document.createTextNode("Close");
                                 closeButton.appendChild(buttonText);
@@ -89,6 +99,7 @@ const Search = () => {
                         })
                                                                       
                     }
+                //if error with fetch print it 
                 }catch(error){
                     console.log(`Error message: ${error}`)
                 }
@@ -100,13 +111,16 @@ const Search = () => {
             const heroName = e["name"];
         
             try {
+                //fetch the hero information 
                 const s = await fetch(`/api/heroes/${heroName}/information`)
         
+                //if error returned print it 
                 if (!s.ok) {
                     const j = await s.json()
                     console.log(j.message);
                     setE(j.message)
         
+                //if successful print it correctly 
                 } else {
                     const j = await s.json()
                     console.log(j)
@@ -123,6 +137,7 @@ const Search = () => {
 
                     parentList.append(items);
         
+                    //close button
                     const closeButton = document.createElement("button");
                     const buttonText = document.createTextNode("Close");
                     closeButton.appendChild(buttonText);
@@ -135,12 +150,14 @@ const Search = () => {
         
                     parentList.append(closeButton);
                 }
+            //if error with fetch print it 
             } catch (error) {
                 console.log(`Error message: ${error}`)
             }
         });
             
 
+        //for the DDG search 
         searchButton.addEventListener('click', async function () {
             const heroName = e["name"];
             const publisher = e["Publisher"]
@@ -148,14 +165,14 @@ const Search = () => {
             const search = encodeURIComponent(heroName+" "+publisher)
         
             try {
-                
+                //search the DDG in a new window 
                 window.open(`https://duckduckgo.com/${search}`, "_blank")
                 
+            //if error print it 
             } catch (error) {
                 console.log(`Error message: ${error}`)
             }
         });
-
 
           innerList.appendChild(powerButton)
           innerList.appendChild(infoButton)
@@ -167,6 +184,7 @@ const Search = () => {
       }
 
 
+    //function to search the data 
     async function searching(name, race, pub, power){
 
         try{
@@ -180,11 +198,13 @@ const Search = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!s.ok) {
                 const j = await s.json()
                 console.log(j.message);
                 setE(j.message)                  
 
+            //else display the results 
             } else{
                 const j = await s.json()
                 
@@ -192,11 +212,13 @@ const Search = () => {
                 displayResults(j)
                 
             }
+        //if error with fetch print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
+    //run the search function
     const buttonClick = () => {
         setE("")
 

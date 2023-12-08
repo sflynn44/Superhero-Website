@@ -8,13 +8,17 @@ import { removeTags } from './sanitization';
 const Grant = () => {
     const nav = useNavigate()
 
+    //get username to display
     let userN = localStorage.getItem("username")
 
+    //create variables 
     const [email, setE] = useState("")
     const [userE, setUE] = useState("")
 
+    //function to grant admin 
     async function granting(email){
 
+        //get email and token to verify 
         let admin = localStorage.getItem("email")
         let token = localStorage.getItem("jwtToken");
 
@@ -30,10 +34,12 @@ const Grant = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
+            //if error response print it 
             if (!grant.ok) {
                 const j = await grant.json()
                 console.log(j.message);
                 setUE(j.message)
+            //if successful print it and go to home page 
             } else{
                 const j = await grant.json()
                 console.log(j.message);
@@ -41,11 +47,13 @@ const Grant = () => {
 
                 nav('/')
             }
+        //else if successful print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
+    //function to adjust the status of a user 
     async function deactivating(email, type){
 
         let admin = localStorage.getItem("email")
@@ -62,10 +70,12 @@ const Grant = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error response print it
             if (!grant.ok) {
                 const j = await grant.json()
                 console.log(j.message);
                 setUE(j.message)
+            //if successful print it and go to home page 
             } else{
                 const j = await grant.json()
                 console.log(j.message);
@@ -73,6 +83,7 @@ const Grant = () => {
 
                 nav('/accountS')
             }
+        //else if successful print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
@@ -82,6 +93,7 @@ const Grant = () => {
 
         setUE("")
 
+        //ensure email is input and is valid format 
         if (email === "") {
             setUE("Please enter an email address")
             return
@@ -92,8 +104,10 @@ const Grant = () => {
             return
         }
 
+        //sanitization 
         setE(removeTags(email))
 
+        //get the type selected 
         let selectedType = document.getElementById("dropdown").value
 
         if(selectedType.trim() === ""){
@@ -101,6 +115,7 @@ const Grant = () => {
           return
         }
 
+        //based on the selected action call the funtion 
         if(selectedType == "grant"){
             granting(email)
         }else if(selectedType == "DE"){

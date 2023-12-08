@@ -7,8 +7,10 @@ import { removeTags } from './sanitization';
 const CreateAccount = () => {
     const nav = useNavigate()
 
+    //get the username to be displayed 
     let userName = localStorage.getItem("username")
 
+    //create the values that will be used 
     const [userN, setUN] = useState("")
     const [emailA, setEA] = useState("")
     const [passW, setP] = useState("")
@@ -17,6 +19,8 @@ const CreateAccount = () => {
     const [error3, setE3] = useState("")
     const [createE, setCE] = useState("")
 
+
+    //this will call the create user function
     async function createA(userN, emailA, passW){
         try{
             const create = await fetch('/api/users/createUser', {
@@ -29,29 +33,38 @@ const CreateAccount = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if there is an error print it on the page 
             if (!create.ok) {
                 const j = await create.json()
                 console.log("Response:", j.message);
                 setCE(j.message)
                 
             }else{
+                //if it has been created print the succes message 
                 const j = await create.json()
                 console.log("Response:", j.message);
                 setCE(j.message)
 
+                //go back to the home screen 
                 nav('/')
             }
+        //if error with fetch print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
+
+
     const buttonClick = () => {
         
+        //clear the error messages 
         setE1("")
         setE2("")
         setE3("")
         setCE("")
+
+        //ensure all required fields are filled in:
 
         if(userN === ""){
             setE1("Please enter a username")
@@ -68,15 +81,17 @@ const CreateAccount = () => {
             return
         }
 
+        //ensure email is in proper format 
         if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailA)){
             setE2("Please enter a valid email")
         }
 
+        //sanitize user input 
         setUN(removeTags(userN))
         setP(removeTags(passW))
         setEA(removeTags(emailA))
 
-        
+        //call create function 
         createA(userN, emailA, passW)
 
     }

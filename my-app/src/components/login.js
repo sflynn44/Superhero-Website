@@ -8,8 +8,10 @@ import { removeTags } from './sanitization';
 const Login = () => {
     const nav = useNavigate()
 
+    //get username to display
     let userN = localStorage.getItem("username")
 
+    //create variables 
     const [email, setE] = useState("")
     const [passW, setP] = useState("")
     const [userE, setUE] = useState("")
@@ -17,6 +19,8 @@ const Login = () => {
     const [loginE, setLE] = useState("")
     const [verify, setV] = useState("")
 
+
+    //function to log in 
     async function loginAccount(emailA, passW){
         try{
             const login = await fetch('/api/users/confirmLogin', {
@@ -29,34 +33,37 @@ const Login = () => {
                     "Content-type": "application/json"
                 }
             })
-            //check the response 
+            //if error response print it  
             if (!login.ok) {
                 const j = await login.json()
                 console.log(j.message);
                 setLE(j.message)
 
+                //if error message is about verification direct the write path
                 if(j.message == "Email has not been verified"){
                     setV(`Please click on the link to verify email`);
                 }
 
             } else{
+                //print success message 
                 const j = await login.json()
                 console.log(j.message);
                 setLE(j.message)
 
-                console.log(j)
-                console.log(j.nickName)
+                //set local storage with needed info
                 localStorage.setItem("jwtToken", j.jwtToken);
                 localStorage.setItem("email", email)
                 localStorage.setItem("username", j.nickName)
 
                 nav('/')
             }
+        //if error with fetch print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
+    //go to create account page 
     const buttonClick1 = () => {
         nav("/createA") 
     }
@@ -67,8 +74,7 @@ const Login = () => {
         setPE("")
         setLE("")
 
-
-
+        //ensure all required fields are filled in 
         if (email === "") {
             setUE("Please enter your email address")
             return
@@ -79,13 +85,16 @@ const Login = () => {
             return
         }
 
+        //ensure email is valid 
         if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)){
             setUE("Please enter a valid email")
         }
 
+        //sanitize 
         setE(removeTags(email))
         setP(removeTags(passW))
 
+        //log into account 
         loginAccount(email, passW)
 
     }

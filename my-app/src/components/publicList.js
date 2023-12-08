@@ -5,8 +5,10 @@ import './publicList.css';
 
 const Public = () => {
 
+    //get the username to display 
     let userN = localStorage.getItem("username")
 
+    //create the values 
     const [listsNames, setDO] = useState([]);
     const [listData, setData] = useState()
     const [title, setT] = useState();
@@ -14,6 +16,7 @@ const Public = () => {
     const [heroInfo, setHI] = useState();
     const [requiredInfo, setRI] = useState();
 
+    //populate the list when the page is entered
     useEffect(() => {
         populateList();
     }, []);
@@ -25,7 +28,7 @@ const Public = () => {
         newPublicListInfo(title)
     }
 
-
+    //populate the list with public lists 
     async function populateList(){
 
         try{
@@ -37,6 +40,7 @@ const Public = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!populate.ok) {
                 const j = await populate.json()
                 console.log(j.message);
@@ -45,25 +49,31 @@ const Public = () => {
                 const j = await populate.json();
                 console.log(j)
 
+                //adjust lists based on modification date 
                 const listsDate = j.files.map((list) => ({...list,
                     modsDate: new Date(list.modsDate),
                 }));
 
+                //sort the lists 
                 const sortedList = listsDate.sort(
                     (a, b) => b.modsDate - a.modsDate
                 );
 
+                //only get the most recent 10
                 const recent10Lists = sortedList.slice(0, 10);
 
+                //set the values 
                 setDO(recent10Lists);             
                 
             }
+        //if error with fetch print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
+    //function to show list information
     async function showList(title){
 
         try{
@@ -77,16 +87,19 @@ const Public = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!info.ok) {
                 const j = await info.json()
                 console.log(j.message);
                 setE(j.message)
+            //set the data if successful
             } else{
                 const j = await info.json()
                 console.log(j)
                 setData(j)
 
             }
+        //if error with fetch print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
@@ -98,21 +111,25 @@ const Public = () => {
         try{
             const info = await fetch(`/api/heroes/getInfo/${selectTitle}`
             )
+            //if error returned print it 
             if (!info.ok) {
                 const j = await info.json()
                 console.log(j.message);
                 setE(j.message)
+            //set the data if successful
             } else{
                 const j = await info.json()
                 console.log(j)
                 setHI(j)
             }
+        //if error with fetch print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
+    //get the info that should show for the public lists 
     async function newPublicListInfo(title){
 
         try{
@@ -126,44 +143,46 @@ const Public = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!info.ok) {
                 const j = await info.json()
                 console.log(j.message);
                 setE(j.message)
+            //set the data if successful
             } else{
                 const j = await info.json()
                 console.log(j)
                 setRI(j)
             }
+        //if error with fetch print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
     }
 
 
-
+    //reset data 
     const buttonClick4= () => {
         setHI()
-
     }
 
+    //get list info for heroes in list 
     const buttonClick3= () => {
         setE("")
 
         listInfo(title)
-
     }
 
+    //get list info
     const buttonClick2= () => {
         setE("")
 
         showList(title)
-
     }
 
+    //reset data 
     const buttonClick1= () => {
         setData()
-
     }
 
     return (

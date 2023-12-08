@@ -6,8 +6,10 @@ import { useParams } from 'react-router-dom';
 const Verify = () => {
     const nav = useNavigate()
 
+    //get the email 
     const { email } = useParams();
 
+    //function to verify email 
     async function verifing(email){
         try{
             const ver = await fetch(`/api/users/emailConfirmation/${email}`, {
@@ -20,10 +22,11 @@ const Verify = () => {
                     "Content-type": "application/json"
                 }
             })
+            //if error returned print it 
             if (!ver.ok) {
                 const j = await ver.json()
                 console.log("Response:", j.message);
-                
+            //if successful print it 
             }else{
                 const j = await ver.json()
                 console.log("Response:", j.message);
@@ -35,6 +38,7 @@ const Verify = () => {
         }
     }
 
+    //call verify function
     const buttonClick = () => {
         verifing(email)
     }

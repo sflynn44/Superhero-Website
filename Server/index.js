@@ -81,14 +81,14 @@ fs.readFile('Server/superhero_powers.json', 'utf8', (e, jsonPower) => {
     }
 });
 
-
+///////////////////////////////////////////////////////////////////////////may not have used 
 // Get all the heroes information
 router.get('/', (req, res) => {
     res.json(data);
   });
 
   
-
+/////////////////////////////////////////////////////////////////////////////may not have used 
 // Get a heroes powers by their ID
 router.get('/:name', (req, res) => {
 
@@ -129,9 +129,9 @@ router.get('/:name', (req, res) => {
 });
 
 
-//Get a heroes information from their ID
+//Get a heroes information from their name
 router.get('/:name/information', (req, res) => {
-  //read the id into int and search for the hero that matches it
+  //get the name and search for the hero that matches it
   const heroName = req.params.name;
   const hero = data.find(hero => hero.name === heroName);
 
@@ -147,15 +147,6 @@ router.get('/:name/information', (req, res) => {
   }
   
 });
-
-
-
-
-
-
-
-
-
 
 
 //Search function based on the user input 
@@ -287,7 +278,6 @@ router.post('/createList', (req, res) => {
   }
 
   //get the number of lists the have been created 
-  
   const numOfLists = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'))
 
   // Filter files based on the owner's email address
@@ -305,6 +295,7 @@ router.post('/createList', (req, res) => {
     return res.status(400).json({ message: "Number of lists cannot exceed 20" });
   }
 
+  //get the date of creation 
   const currentDate = new Date();
 
   //new list content 
@@ -339,6 +330,8 @@ router.delete("/deleteList", (req, res) => {
   res.json({message: "List has been deleted"})
   
 })
+
+
 
 //add hero id to the requested custom made list 
 router.put("/addHero", (req, res) =>{
@@ -391,11 +384,11 @@ router.put("/addHero", (req, res) =>{
     res.json({message: "List cleared and heroes added to list"})
   }
 
-
+  //get the date of modification and add it to the list information
   const currentDate = new Date();
-
   currentData[4].Modification[0] = currentDate
 
+  //write the new changed 
   fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData));
 
 })
@@ -404,9 +397,10 @@ router.put("/addHero", (req, res) =>{
 
 
 
-
+//this will allow the user to edit their lists 
 router.put("/editLists", (req, res) =>{
 
+  //get the required values 
   const name = req.body.name
   const description = req.body.des
   const visibility = req.body.visibility
@@ -419,60 +413,66 @@ router.put("/editLists", (req, res) =>{
     return res.status(400).json({message: "List does not exists"})
   }
 
+  //if there is a description change 
   if(description !== ""){
     //get the current data of the list 
     const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
-    console.log(currentData[2].Description[0])
 
+    //update the description
     currentData[2].Description[0] = description
 
+    //write the new changes into the file 
     fs.writeFileSync(`Lists/${title}.json`, JSON.stringify(currentData));
 
+    //change to true 
     change = "True"
   }
 
+  //if there is a visibility selection
   if(visibility !== ""){
     //get the current data of the list 
     const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
-    console.log(currentData[1].View[0])
 
+    //change the visibility 
     currentData[1].View[0] = visibility
 
+    //write the new changes into the file 
     fs.writeFileSync(`Lists/${title}.json`, JSON.stringify(currentData));
 
+    //change to true 
     change = "True"
   }
 
+  //if there is a name change 
   if(name !== ""){
+    //rewrite the name of the file 
     fs.renameSync(`Lists/${title}.json`, `Lists/${name}.json`)
 
+    //change to true 
     change = "True"
   }
 
+  //get the current data 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
+
+  //get the current date of the edit 
   const currentDate = new Date();
 
+  //adjust for the new date 
   currentData[4].Modification[0] = currentDate
 
+  //write the changes into the files 
   fs.writeFileSync(`Lists/${listN}.json`, JSON.stringify(currentData));
 
   if(change === "True"){
-    // Send a response to the client
+    //send a response to the user is successful
     return res.status(200).json({message: "List updated successfully"})
   }else{
+    //send a response to the user if no changes made 
     return res.status(400).json({message: "No changes were made"})
   }
 
 })
-
-
-
-
-
-
-
-
-
 
 
 
@@ -561,7 +561,6 @@ router.get("/getInfo/:listName", (req, res) =>{
 router.post('/lists/j', (req, res) => {
 
   const username = req.body.email
-  console.log(username)
 
   //read all the files under List and then filter in the ones that end in json
   const customListNames = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'))
@@ -583,13 +582,13 @@ router.post('/lists/j', (req, res) => {
 
 
 
-//get the names of the custom lists created 
+//get the names of all the publci lists 
 router.post('/lists/public', (req, res) => {
 
-  // Read all the files under List and then filter in the ones that end in json
+  //Read all the files under List and then filter in the ones that end in json
   const customListNames = fs.readdirSync('./Lists').filter(file => file.endsWith('.json'));
 
-  // Get modification dates for each file
+  //Get modification dates for each file
   const fileDetails = customListNames.map(file => {
       const filePath = path.join('./Lists', file);
       const fileContent = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
@@ -601,29 +600,29 @@ router.post('/lists/public', (req, res) => {
       };
   });
 
-  // Filter files based on the owner's email address
+  // Filter files based on whether its public
   const userSpecificLists = fileDetails.filter(file => file.isPublic);
 
   // Sort files based on modification date (newest to oldest)
   const sortedLists = userSpecificLists.sort((a, b) => b.modificationDate - a.modificationDate);
 
-  // Get just the beginning name
+  // Get just the name and date 
   const jsonFileNames = sortedLists.map(file => ({
       name: file.fileName,
       modificationDate: file.modificationDate,
   }));
 
+  //send the file names and date 
   res.json({ files: jsonFileNames }); 
-
 })
 
 
 
-
+//this will get all the information for a list 
 router.post('/getListInfo', (req, res) => {
 
+  //get the title 
   const title = req.body.title
-  console.log(title)
 
   //if the list does not exist send error message 
   if(!fs.existsSync(`Lists/${title}.json`)){
@@ -632,31 +631,36 @@ router.post('/getListInfo', (req, res) => {
 
   //get the data from the specified list 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
-  console.log(currentData)
 
+  //send the data 
   res.json(currentData)
-
 })
 
 
-
+//this will create a new user for the site
 router2.post('/createUser', (req, res) => {
 
+  //retreive the required values 
   const userN = req.body.userN
   const email = req.body.email
   const passW = req.body.passW
 
+  //search for an account already using that email 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
   const user = users.users.find(user => email === user.email)
 
+  //if an account is found send an error message
   if(user){
     return res.status(400).json({message: "User already exists with that email"})
   }
 
+  //hash the input password using bcrypt 
   bcrypt.hash(passW,10,(error, hashedPass) => {
+    //if there is an error return it 
     if (error) {
       return res.status(400).json({message: "Hashing error"})
     }
+    //make a new user object with the input values and hashed password 
       const newUser = 
       {
         "username": userN,
@@ -667,197 +671,241 @@ router2.post('/createUser', (req, res) => {
         "admin": "no"
       }
 
+      //add this new user to the user file
       users.users.push(newUser)
 
+      //write this change into the file 
       fs.writeFileSync(`users.json`, JSON.stringify(users))
 
+      //send a success response 
       return res.status(200).json({message: "User created successfully"})
-
     }
   )
 })
 
 
+//this will confirm the login 
 router2.post('/confirmLogin', (req, res) => {
 
+  //get the input values by the user 
   const email = req.body.email
   const passW = req.body.passW
 
+  //determine if that user exists 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
   const user = users.users.find(user => email === user.email)
   
+  //if it does not inform them that no user with that email exists
   if(!user){
-    console.log("No user exists")
     return res.status(400).json({message: "No user with that email exists"})
   }
 
+  //get the username for the user 
   const nickName = user.username 
 
+  //if the account has been deactivated inform the user 
   if(user.status == "Deactivated"){
     return res.status(400).json({message: "User account is disabled. Please contact the administrator. "})
   }
 
+  //if the account is unverified inform the user 
   if(user.verification == "Unverified"){
     return res.status(400).json({message: "Email has not been verified"})
   }
 
+  //get the hashed password
   const hashedPassword = user.password
 
+  //compare the input password with the hashed password 
   bcrypt.compare(passW, hashedPassword, (error, result) => {
     
+    //if there is an error report it 
     if(error){
       return res.status(500).json({message: "Error during login comparison"});
-  } else if(result){
+
+    //if there is no error 
+    } else if(result){
       console.log("Successful password comparison");
 
+      //create a jwt token and send it with the nickname 
       const admin = user.admin
       let jwtData = {email, admin};
       const jwtToken = jwt.sign(jwtData, process.env.JWT_SECRET, {expiresIn: "1h",});
       return res.status(200).json({message: "Successful login", jwtToken, nickName})
 
-  } else {
+    //if there is no result then inform the user the password is incorrect 
+    } else {
       console.log("Password comparison failed");
       return res.status(401).json({message: "Invalid password"});
-  }
-
+    }
   })
 })
 
+
+//this will confirm the users email 
 router2.post('/emailConfirmation/:email', (req, res) => {
 
+  //get the users email 
   const email = req.params.email
 
+  //determine if that user exists 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
-  const user = users.users.findIndex(user => email === user.email)
-
+  const user = users.users.find(user => email === user.email)
+  
+  //if it does not inform them that no user with that email exists
   if(!user){
     return res.status(400).json({message: "No user with that email exists"})
   }
 
+  //change the verification in the users account to verified 
   users.users[user].verification = "Verified"
 
+  //write in these new changes 
   fs.writeFileSync(`users.json`, JSON.stringify(users))
 
+  //return a success message 
   return res.status(200).json({message: "Email has been verified"})
 
 })
 
 
+//this will grant admin abilities to other users
 router3.post('/grantAdmin', (req, res) => {
 
+  //get the email and admin test 
   const email = req.body.email
   const adminTest = req.body.adminN
 
-  console.log(email)
-
+  //get all the users
   const users = JSON.parse(fs.readFileSync(`users.json`))  
 
   const ad = users.users.find(user => adminTest === user.admin)
 
+  //if the user if not the original admim inform them they can not grant admin 
   if("admin123@gmail.com" !== adminTest || ad == "No"){
     return res.status(400).json({message: "You do not have administrator access"})
   }
+
+  //get the index of the user we want to grant admin to
   const changedUser = users.users.findIndex(user => email === user.email)
 
+  //if they do not exist inform the user 
   if(!changedUser){
     return res.status(400).json({message: "No user with that email exists"})
   }
 
+  //change the users admin status 
   users.users[changedUser].admin = "Yes"
 
+  //write in the new changes 
   fs.writeFileSync(`users.json`, JSON.stringify(users))
 
+  //return success message
   return res.status(200).json({message: "Administrator permissions have been given"})
 
 })
 
 
+//this will deactivate the user 
 router3.post('/deactivate', (req, res) => {
 
+  //get the required values 
   const email = req.body.email
   const adminTest = req.body.adminN
   const type = req.body.type
 
-  const users = JSON.parse(fs.readFileSync(`users.json`))  
+  //get the users
+  const users = JSON.parse(fs.readFileSync(`users.json`)) 
 
+  //if the user if not the original admim inform them they can not grant admin 
   const ad = users.users.find(user => adminTest === user.admin)
-
   if("admin123@gmail.com" !== adminTest || ad == "No"){
     return res.status(400).json({message: "You do not have administrator access"})
   }
+  //get the index of the user we want to deactivate to
   const changedUser = users.users.findIndex(user => email === user.email)
 
+  //if they do not exist inform the user 
   if(!changedUser){
     return res.status(400).json({message: "No user with that email exists"})
   }
 
+  //adjust the status of the user based on the desired action by the admin
   if(type == "deactiveate"){
     users.users[changedUser].status = "Deactiveated"
   } else if(type == "active"){
     users.users[changedUser].status = "Active"
   }
 
+  //write the new changed into the user file
   fs.writeFileSync(`users.json`, JSON.stringify(users))
 
+  //return a success statement
   return res.status(200).json({message: "This user has been deactivated"})
 
 })
 
 
-
-
+//this will update the password for the user 
 router3.post('/updatePassword', (req, res) => {
 
+  //get the required values 
   const oldPass = req.body.oldPass
   const newPass = req.body.newPass
   const confirmPass = req.body.confirmPass
   const email = req.body.email 
 
+  //get the users and find the index of the user we want to change 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
   const user = users.users.findIndex(user => email === user.email)
 
+  //if user doesn't exist or if password do not match return error 
   if(!user){
     return res.status(400).json({message: "No user with that email exists"})
   }
-
   if (newPass != confirmPass){ 
     return res.status(400).json({message: "Passwords do not match"})
   }
 
+  //get the currnet hashed password 
   const storedHashedPassword = users.users[user].password;
 
+  //compare the old password with the current stored password 
   bcrypt.compare(oldPass, storedHashedPassword, (error, result) => {
     
+    //send error if occurs 
     if(error) {
       return res.status(500).json({ message: "Error during password comparison" });
 
+    //if no results send error 
     } else if (!result) {
       return res.status(400).json({ message: "Old password is incorrect" });
 
+    //if comparison works hash the new password
     } else if(result){
 
       bcrypt.hash(newPass,10,(error, hashedPass) => {
 
         if (error) {
           return res.status(400).json({message: "Error during hashing "})
-        }else{
-        users.users[user].password = hashedPass
 
+        }else{
+        //set the new password and write it into the user file 
+        users.users[user].password = hashedPass
         fs.writeFileSync(`users.json`, JSON.stringify(users))
 
+        //send success message 
         return res.status(200).json({message: "Password has been changed."})
         }
       })
     }
-
   })
 })
 
-
-
-
+//this will let the user add a review to a list 
 router.post('/addReview', (req, res) => {
 
+  //get required values 
   const rating = req.body.rate 
   const comment = req.body.comment
   const title = req.body.title
@@ -871,23 +919,28 @@ router.post('/addReview', (req, res) => {
   //get the current data of the list 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
 
+  //get the current date to update the modification date 
   const currentDate = new Date()
 
+  //create the new review object with the values 
   let review = {Rating: rating, Comment: comment, User: userN, Posted: currentDate}
 
+  //add it to the current reviews 
   currentData[3].Reviews.push(review)
 
+  //write the changes into the list file 
   fs.writeFileSync(`Lists/${title}.json`, JSON.stringify(currentData));
 
+  //send success response 
   res.json({message: "Review added to the List"})
 
 })
 
 
-
-
+//this will get the info meant to be shown to non users 
 router.post('/getPublicInfo', (req, res) => {
 
+  //get the title of the file 
   const title = req.body.title
 
   //if the list does not exist send error message 
@@ -898,36 +951,37 @@ router.post('/getPublicInfo', (req, res) => {
   //get the data from the specified list 
   const currentData = JSON.parse(fs.readFileSync(`Lists/${title}.json`))
 
+  //create the required data array to be sent 
   const requiredData = []; 
 
+  //add the title 
   requiredData.push(title)
 
+  //get the users email 
   const email = currentData[0].Owner[0]
 
+  //get the user information for that email 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
   const user = users.users.find(user => email === user.email)
 
+  //add the users email to the data 
   requiredData.push(user.username)
 
+  //add the number of heroes to the data 
   const length = currentData[5].IDs[0].length
-
   requiredData.push(length)
 
-
+  //get the average of the ratings and add it to the data 
   let ratingTotal = 0;
-
   const reviews = currentData[3].Reviews
-
   for (let i = 0; i < reviews.length; i++) {
     ratingTotal += parseInt(reviews[i].Rating);
   }
-
   const avgRating = ratingTotal / reviews.length;
-
   requiredData.push(avgRating)
 
+  //send the data 
   res.json(requiredData)
-
 })
 
 

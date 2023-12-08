@@ -7,9 +7,11 @@ import { removeTags } from './sanitization';
 const UpdatePass = () => {
     const nav = useNavigate()
 
+    //get the username and email 
     let userN = localStorage.getItem("username")
     let email = localStorage.getItem("email")
 
+    //create the values 
     const [oldPass, setP] = useState("")
     const [newPass, setNP] = useState("")
     const [confirmPass, setCP] = useState("")
@@ -17,9 +19,10 @@ const UpdatePass = () => {
     const [passwordE2, setPE2] = useState("")
     const [passwordE3, setPE3] = useState("")
 
+    //functin to update the password 
+    async function updating(oldPass, newPass, confirmPass){
 
-    async function updating(userN, oldPass, newPass, confirmPass){
-
+        //get the jwt token for authentication 
         let token = localStorage.getItem("jwtToken");
 
         try{
@@ -34,10 +37,12 @@ const UpdatePass = () => {
                     'Authorization': `Bearer ${token}`
                 }
             })
+            //if error returned print it 
             if (!update.ok) {
                 const j = await update.json()
                 console.log(j.message);
                 setPE3(j.message)
+            //if successful print it 
             } else{
                 const j = await update.json()
                 console.log(j.message);
@@ -45,6 +50,7 @@ const UpdatePass = () => {
 
                 nav('/accountS')
             }
+        //if error with fetch print it 
         }catch(error){
             console.log(`Error message: ${error}`)
         }
@@ -58,6 +64,7 @@ const UpdatePass = () => {
         setPE2("")
         setPE3("")
 
+        //ensure all fields are filled in 
         if(oldPass === ""){
             setPE1("Please enter your current password")
             return
@@ -73,15 +80,18 @@ const UpdatePass = () => {
             return
         }
 
+        //ensure new passwords match 
         if(newPass != confirmPass){
             setPE3("Please enter the same password")
             return
         }
 
+        //sanitize 
         setP(removeTags(oldPass))
         setNP(removeTags(newPass))
         setCP(removeTags(confirmPass))
 
+        //call update function 
         updating(userN, oldPass, newPass, confirmPass)
             
     }

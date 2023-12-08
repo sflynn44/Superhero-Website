@@ -6,6 +6,7 @@ import './homePage.css';
 const Home = () => {
     const nav = useNavigate()
 
+    //get username to display
     let userN = localStorage.getItem("username")
 
     return (
