@@ -107,6 +107,7 @@ const CreateAccount = () => {
                 <Link to= '/customL'>Custom Lists</Link>
                 <Link to='/accountS'>Account Settings</Link>
                 <Link to='/login' className = "selected">Login</Link>
+                <Link to ='/pol'>Policies</Link>
                 <h3>{userName}</h3>
             </div>
 

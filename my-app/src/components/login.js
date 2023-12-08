@@ -109,6 +109,7 @@ const Login = () => {
                     <Link to= '/customL'>Custom Lists</Link>
                     <Link to='/accountS'>Account Settings</Link>
                     <Link to='/login' className = "selected">Login</Link>
+                    <Link to ='/pol'>Policies</Link>
                     <h3>{userN}</h3>
             </div>
 

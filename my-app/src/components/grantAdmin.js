@@ -135,6 +135,7 @@ const Grant = () => {
                 <Link to= '/customL'>Custom Lists</Link>
                 <Link to='/accountS' className = "selected">Account Settings</Link>
                 <Link to='/login'>Login</Link>
+                <Link to ='/pol'>Policies</Link>
                 <h3>{userN}</h3>
             </div>
 

@@ -235,6 +235,7 @@ const Search = () => {
                 <Link to= '/customL'>Custom Lists</Link>
                 <Link to='/accountS'>Account Settings</Link>
                 <Link to='/login'>Login</Link>
+                <Link to ='/pol'>Policies</Link>
                 <h3>{userN}</h3>
             </div>
 

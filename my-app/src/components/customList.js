@@ -569,6 +569,7 @@ const Custom = () => {
                 <Link to= '/customL' className = "selected">Custom Lists</Link>
                 <Link to='/accounts'>Account Settings</Link>
                 <Link to='/login'>Login</Link>
+                <Link to ='/pol'>Policies</Link>
                 <h3>{userN}</h3>
             </div>
 

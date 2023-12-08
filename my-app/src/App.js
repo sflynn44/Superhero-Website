@@ -9,6 +9,7 @@ import Verify from "./components/verifyEmail"
 import Search from "./components/search"
 import Custom from "./components/customList"
 import Public from "./components/publicList"
+import Policies from './components/policies';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/search" element = {<Search />}/>
           <Route path="/customL" element = {<Custom />}/>
           <Route path="/publicL" element = {<Public />}/>
+          <Route path="/pol" element = {<Policies />}/>
           <Route path="/api/users/emailConfirmation/:email" element={<Verify />} />
         </Routes>
       </BrowserRouter>
