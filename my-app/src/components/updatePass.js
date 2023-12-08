@@ -24,6 +24,7 @@ const UpdatePass = () => {
 
         //get the jwt token for authentication 
         let token = localStorage.getItem("jwtToken");
+        console.log(oldPass,newPass,confirmPass)
 
         try{
             const update = await fetch('/api/auth/updatePassword', {
@@ -86,13 +87,8 @@ const UpdatePass = () => {
             return
         }
 
-        //sanitize 
-        setP(removeTags(oldPass))
-        setNP(removeTags(newPass))
-        setCP(removeTags(confirmPass))
-
         //call update function 
-        updating(userN, oldPass, newPass, confirmPass)
+        updating(oldPass, newPass, confirmPass)
             
     }
 

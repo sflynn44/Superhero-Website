@@ -871,6 +871,7 @@ router3.post('/updatePassword', (req, res) => {
   const newPass = req.body.newPass
   const confirmPass = req.body.confirmPass
   const email = req.body.email 
+  console.log(req.body)
 
   //get the users and find the index of the user we want to change 
   const users = JSON.parse(fs.readFileSync(`users.json`))  
