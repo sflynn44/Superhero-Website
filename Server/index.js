@@ -11,6 +11,7 @@ const router3 = express.Router()
 const bodyParser = require('body-parser');
 const path = require('path');
 const jwt = require("jsonwebtoken");
+const Fuse = require('fuse.js');
 
 app.use('/', express.static('my-app'));
 
@@ -147,6 +148,16 @@ router.get('/:name/information', (req, res) => {
   
 });
 
+// Function for soft matching using Fuse library
+function fuzzySearch(data, query, keys) {
+  const fuse = new Fuse(data, {
+    keys: keys,
+    threshold: 0.3, // Adjust the threshold based on your preference
+  });
+
+  return fuse.search(query);
+}
+
 
 //Search function based on the user input 
 router2.post('/searchHeroes', (req, res) => {
@@ -155,34 +166,35 @@ router2.post('/searchHeroes', (req, res) => {
   const nameR = req.body.nameR.toLowerCase()
   const raceR = req.body.raceR.toLowerCase()
   const pubR = req.body.publisherR.toLowerCase()
-  const powerR = req.body.powerR
+  let powerR = req.body.powerR.toLowerCase()
 
-  //alter the power to not be case sensitive 
-  const firstLetPower = powerR.charAt(0)
-  const upperFLP = firstLetPower.toUpperCase()
-  const remainingP = powerR.slice(1)
-  const newPowerR = upperFLP + remainingP
 
   //copy all of the data
   let results = data
 
   //if there is input in the name category filter the heroes for the name 
   if(nameR !== ""){
-    results = results.filter(hero => hero.name.toLowerCase().includes(nameR))
+    results = fuzzySearch(results, nameR, ['name']);
+
+    results = results.map(item => item.item);
   }
 
   //if there is input in the race category filter the heroes for the race 
   if (raceR !== ""){
-    results = results.filter(hero => hero.Race.toLowerCase().includes(raceR))
+    results = fuzzySearch(results, raceR, ['Race']);
+    results = results.map(item => item.item);
   }
 
   //if there is input in the publisher category filter the heroes for the publisher 
   if (pubR !== ""){
-    results = results.filter(hero => hero.Publisher.toLowerCase().includes(pubR))
+    results = fuzzySearch(results, pubR, ['Publisher']);
+    results = results.map(item => item.item);
   }
 
   //if there is input in the power category filter the heroes for the power 
-  if (newPowerR !== ""){
+  if (powerR !== ""){
+
+    let newPowerR = powerR[0].toUpperCase() + powerR.slice(1)
 
     //if all the other search fields are empty search for powers from power array
     if(nameR == "" && raceR == "" && pubR == ""){
@@ -207,7 +219,7 @@ router2.post('/searchHeroes', (req, res) => {
             }
             
             //set results equal to that list of heros 
-            results = powerResult
+            results = powerResult.flat()
         }
       }
 
