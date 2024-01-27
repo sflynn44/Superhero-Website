@@ -67,7 +67,7 @@ const Custom = () => {
             api = '/api/heroes/lists/public'
             type = 1 
         }else{
-            api = '/api/heroes/lists/j'
+            api = '/api/heroes/List/j'
             type = 2
         }
 
